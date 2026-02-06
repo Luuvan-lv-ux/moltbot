@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moltbot - Cấu Hình OpenClaw</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">🤖</span>
+                <span class="logo-text">Moltbot</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#model" class="nav-item active" data-section="model">
+                    <span class="nav-icon">🧠</span>
+                    <span>Model AI</span>
+                </a>
+                <a href="#telegram" class="nav-item" data-section="telegram">
+                    <span class="nav-icon">📱</span>
+                    <span>Telegram</span>
+                </a>
+                <a href="#gateway" class="nav-item" data-section="gateway">
+                    <span class="nav-icon">🌐</span>
+                    <span>Gateway</span>
+                </a>
+                <a href="#agents" class="nav-item" data-section="agents">
+                    <span class="nav-icon">🤝</span>
+                    <span>Agents</span>
+                </a>
+                <a href="#plugins" class="nav-item" data-section="plugins">
+                    <span class="nav-icon">🔌</span>
+                    <span>Plugins</span>
+                </a>
+                <a href="#skills" class="nav-item" data-section="skills">
+                    <span class="nav-icon">⚡</span>
+                    <span>Skills</span>
+                </a>
+                <a href="#security" class="nav-item" data-section="security">
+                    <span class="nav-icon">🔒</span>
+                    <span>Bảo mật</span>
+                </a>
+                <a href="#logging" class="nav-item" data-section="logging">
+                    <span class="nav-icon">📋</span>
+                    <span>Logging</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn btn-primary btn-export" id="exportBtn">
+                    <span>💾</span> Xuất Config
+                </button>
+                <button class="btn btn-secondary btn-import" id="importBtn">
+                    <span>📂</span> Nhập Config
+                </button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <h1 id="sectionTitle">Cấu hình Model AI</h1>
+                <p class="header-desc" id="sectionDesc">Chọn và cấu hình các model AI cho bot của bạn</p>
+            </header>
+
+            <div class="content-wrapper">
+                <!-- Model AI Section -->
+                <section id="model" class="config-section active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🎯 Model Chính</h3>
+                            <p>Model sẽ được sử dụng mặc định cho tất cả các tác vụ</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="primaryModel">Model chính</label>
+                                <select id="primaryModel" class="form-control">
+                                    <optgroup label="🌙 Moonshot (Kimi)">
+                                        <option value="moonshot/kimi-k2.5" selected>Kimi K2.5 - Multimodal, 256K context</option>
+                                        <option value="moonshot/kimi-k2-0905-Preview">Kimi K2 0905 Preview - Agentic</option>
+                                        <option value="moonshot/kimi-k2-turbo-preview">Kimi K2 Turbo - Nhanh</option>
+                                        <option value="moonshot/kimi-k2-thinking">Kimi K2 Thinking - Suy luận sâu</option>
+                                        <option value="moonshot/kimi-k2-thinking-turbo">Kimi K2 Thinking Turbo</option>
+                                        <option value="moonshot/moonshot-v1-128k">Moonshot V1 128K</option>
+                                    </optgroup>
+                                    <optgroup label="🔷 Google (Gemma)">
+                                        <option value="google/models/gemma-3-27b-it">Gemma 3 27B IT - 128K context</option>
+                                    </optgroup>
+                                </select>
+                                <small>Model mạnh nhất nên dùng cho tác vụ phức tạp</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🌙 Moonshot API</h3>
+                            <p>Cấu hình kết nối đến Moonshot AI (Kimi)</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="moonshotApiKey">API Key</label>
+                                <div class="input-group">
+                                    <input type="password" id="moonshotApiKey" class="form-control" placeholder="sk-..." value="">
+                                    <button type="button" class="btn btn-icon toggle-password">👁️</button>
+                                </div>
+                                <small>Lấy tại <a href="https://platform.moonshot.ai" target="_blank">platform.moonshot.ai</a></small>
+                            </div>
+                            <div class="form-group">
+                                <label for="moonshotBaseUrl">Base URL</label>
+                                <input type="text" id="moonshotBaseUrl" class="form-control" value="https://api.moonshot.cn/v1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🔷 Google API (Qua Proxy)</h3>
+                            <p>Cấu hình proxy xoay vòng API key cho Google Gemma</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="googleProxyUrl">Proxy URL</label>
+                                <input type="text" id="googleProxyUrl" class="form-control" value="http://localhost:3000/v1beta">
+                                <small>URL của google-proxy.js chạy local</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Google API Keys (để trong file .env)</label>
+                                <div id="googleKeysContainer">
+                                    <div class="key-item">
+                                        <input type="text" class="form-control google-key" placeholder="GOOGLE_API_KEY_1" disabled value="Được quản lý trong file .env">
+                                    </div>
+                                </div>
+                                <small class="text-warning">⚠️ Các key được quản lý trong file .env để bảo mật</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Telegram Section -->
+                <section id="telegram" class="config-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📱 Cấu hình Telegram Bot</h3>
+                            <p>Kết nối bot với Telegram</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="telegramEnabled" checked>
+                                    <span class="toggle-switch"></span>
+                                    <span>Kích hoạt Telegram</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="telegramToken">Bot Token</label>
+                                <div class="input-group">
+                                    <input type="password" id="telegramToken" class="form-control" placeholder="123456789:ABC...">
+                                    <button type="button" class="btn btn-icon toggle-password">👁️</button>
+                                </div>
+                                <small>Lấy từ <a href="https://t.me/BotFather" target="_blank">@BotFather</a></small>
+                            </div>
+                            <div class="form-group">
+                                <label for="telegramAllowedUsers">Người dùng được phép (để trống = tất cả)</label>
+                                <input type="text" id="telegramAllowedUsers" class="form-control" placeholder="user1, user2, user3">
+                                <small>Danh sách username Telegram, cách nhau bởi dấu phẩy</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="telegramAdminUsers">Admin (quyền cao nhất)</label>
+                                <input type="text" id="telegramAdminUsers" class="form-control" placeholder="admin1, admin2">
+                                <small>Có thể thực thi lệnh hệ thống</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Gateway Section -->
+                <section id="gateway" class="config-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🌐 Gateway Settings</h3>
+                            <p>Cấu hình cổng kết nối OpenClaw</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="gatewayMode">Chế độ</label>
+                                <select id="gatewayMode" class="form-control">
+                                    <option value="local" selected>Local (chỉ máy này)</option>
+                                    <option value="tailscale">Tailscale (mạng riêng)</option>
+                                    <option value="public">Public (⚠️ nguy hiểm)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="gatewayPort">Port</label>
+                                <input type="number" id="gatewayPort" class="form-control" value="18789" min="1024" max="65535">
+                            </div>
+                            <div class="form-group">
+                                <label for="gatewayToken">Token xác thực</label>
+                                <div class="input-group">
+                                    <input type="password" id="gatewayToken" class="form-control" placeholder="Token bảo mật...">
+                                    <button type="button" class="btn btn-icon toggle-password">👁️</button>
+                                    <button type="button" class="btn btn-secondary" id="generateToken">🔄 Tạo mới</button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="gatewayBind">Bind Address</label>
+                                <select id="gatewayBind" class="form-control">
+                                    <option value="loopback" selected>Loopback (127.0.0.1)</option>
+                                    <option value="0.0.0.0">All interfaces (0.0.0.0)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Agents Section -->
+                <section id="agents" class="config-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🤝 Cài đặt Agent</h3>
+                            <p>Điều chỉnh hành vi của AI agent</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group half">
+                                    <label for="maxConcurrent">Số tác vụ đồng thời tối đa</label>
+                                    <input type="number" id="maxConcurrent" class="form-control" value="4" min="1" max="16">
+                                </div>
+                                <div class="form-group half">
+                                    <label for="subagentsConcurrent">Subagents đồng thời</label>
+                                    <input type="number" id="subagentsConcurrent" class="form-control" value="8" min="1" max="32">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="skipBootstrap">
+                                    <span class="toggle-switch"></span>
+                                    <span>Bỏ qua Bootstrap (khởi động nhanh hơn)</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="bootstrapMaxChars">Bootstrap Max Chars</label>
+                                <input type="number" id="bootstrapMaxChars" class="form-control" value="4000" min="1000" max="10000">
+                                <small>Số ký tự tối đa trong bootstrap context</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="compactionMode">Chế độ nén context</label>
+                                <select id="compactionMode" class="form-control">
+                                    <option value="off">Tắt</option>
+                                    <option value="safeguard" selected>Safeguard (khuyên dùng)</option>
+                                    <option value="aggressive">Aggressive</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="workspace">Thư mục làm việc</label>
+                                <input type="text" id="workspace" class="form-control" value="/home/openclaw/workspace">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🧠 Memory & Reasoning</h3>
+                            <p>Cấu hình bộ nhớ và khả năng suy luận</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="memoryEnabled" checked>
+                                    <span class="toggle-switch"></span>
+                                    <span>Kích hoạt bộ nhớ dài hạn</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="memoryMaxTokens">Memory Max Tokens</label>
+                                <input type="number" id="memoryMaxTokens" class="form-control" value="100000" min="10000" max="500000">
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="reasoningEnabled" checked>
+                                    <span class="toggle-switch"></span>
+                                    <span>Kích hoạt chế độ suy luận</span>
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="reasoningDepth">Độ sâu suy luận</label>
+                                <select id="reasoningDepth" class="form-control">
+                                    <option value="shallow">Shallow (nhanh)</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="deep" selected>Deep (chính xác)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Plugins Section -->
+                <section id="plugins" class="config-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🔌 Plugins</h3>
+                            <p>Bật/tắt các plugin mở rộng</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="plugin-grid">
+                                <div class="plugin-item">
+                                    <div class="plugin-icon">📱</div>
+                                    <div class="plugin-info">
+                                        <h4>Telegram</h4>
+                                        <p>Kết nối với Telegram</p>
+                                    </div>
+                                    <label class="toggle-label">
+                                        <input type="checkbox" id="pluginTelegram" checked>
+                                        <span class="toggle-switch"></span>
+                                    </label>
+                                </div>
+                                <div class="plugin-item">
+                                    <div class="plugin-icon">🌐</div>
+                                    <div class="plugin-info">
+                                        <h4>Browser</h4>
+                                        <p>Tự động hóa trình duyệt</p>
+                                    </div>
+                                    <label class="toggle-label">
+                                        <input type="checkbox" id="pluginBrowser" checked>
+                                        <span class="toggle-switch"></span>
+                                    </label>
+                                </div>
+                                <div class="plugin-item">
+                                    <div class="plugin-icon">⏰</div>
+                                    <div class="plugin-info">
+                                        <h4>Scheduler</h4>
+                                        <p>Lên lịch tác vụ tự động</p>
+                                    </div>
+                                    <label class="toggle-label">
+                                        <input type="checkbox" id="pluginScheduler" checked>
+                                        <span class="toggle-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card" id="browserSettings" style="display: block;">
+                        <div class="card-header">
+                            <h3>🌐 Cài đặt Browser</h3>
+                            <p>Tùy chỉnh plugin trình duyệt</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="browserHeadless" checked>
+                                    <span class="toggle-switch"></span>
+                                    <span>Headless Mode (không hiện cửa sổ)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Skills Section -->
+                <section id="skills" class="config-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>⚡ Cài đặt Skills</h3>
+                            <p>Quản lý các skill của bot</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="skillsDirectory">Thư mục Skills</label>
+                                <input type="text" id="skillsDirectory" class="form-control" value="./skills">
+                            </div>
+                            <div class="form-group">
+                                <label for="nodeManager">Node Package Manager</label>
+                                <select id="nodeManager" class="form-control">
+                                    <option value="npm" selected>npm</option>
+                                    <option value="yarn">yarn</option>
+                                    <option value="pnpm">pnpm</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="autoloadSkills" checked>
+                                    <span class="toggle-switch"></span>
+                                    <span>Tự động load skills khi khởi động</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Security Section -->
+                <section id="security" class="config-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🔒 Bảo mật</h3>
+                            <p>Cấu hình an toàn và giới hạn</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="maxRequests">Giới hạn request/phút</label>
+                                <input type="number" id="maxRequests" class="form-control" value="60" min="1" max="1000">
+                                <small>Bảo vệ khỏi spam và lạm dụng</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label warning">
+                                    <input type="checkbox" id="allowShellCommands" checked>
+                                    <span class="toggle-switch"></span>
+                                    <span>Cho phép thực thi lệnh Shell ⚠️</span>
+                                </label>
+                                <small class="text-warning">Cẩn thận: Bot có thể chạy bất kỳ lệnh nào trên hệ thống</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label warning">
+                                    <input type="checkbox" id="allowFileAccess" checked>
+                                    <span class="toggle-switch"></span>
+                                    <span>Cho phép truy cập File ⚠️</span>
+                                </label>
+                                <small class="text-warning">Bot có thể đọc/ghi file trên hệ thống</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Logging Section -->
+                <section id="logging" class="config-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📋 Logging</h3>
+                            <p>Cấu hình ghi log</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="logLevel">Mức độ log</label>
+                                <select id="logLevel" class="form-control">
+                                    <option value="error">Error (chỉ lỗi)</option>
+                                    <option value="warn">Warning</option>
+                                    <option value="info" selected>Info (khuyên dùng)</option>
+                                    <option value="debug">Debug (chi tiết)</option>
+                                    <option value="trace">Trace (tất cả)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="logFile">File log</label>
+                                <input type="text" id="logFile" class="form-control" value="./logs/openclaw.log">
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <input type="checkbox" id="logConsole" checked>
+                                    <span class="toggle-switch"></span>
+                                    <span>Hiển thị log ra console</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">
+        <span class="toast-icon">✅</span>
+        <span class="toast-message">Đã lưu cấu hình!</span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

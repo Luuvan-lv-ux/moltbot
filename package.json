@@ -1,0 +1,18 @@
+{
+    "name": "moltbot",
+    "version": "2.0.0",
+    "description": "OpenClaw Bot với Moonshot Kimi và Google Gemma",
+    "main": "google-proxy.js",
+    "scripts": {
+        "proxy": "node google-proxy.js",
+        "test": "node skills/book-price-scraper/index.js \"Đắc Nhân Tâm\""
+    },
+    "author": "Moltbot Team",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^1.13.4",
+        "cheerio": "^1.0.0-rc.12",
+        "dotenv": "^16.6.1",
+        "express": "^5.2.1"
+    }
+}

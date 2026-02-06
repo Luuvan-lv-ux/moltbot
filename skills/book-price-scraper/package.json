@@ -1,0 +1,12 @@
+{
+    "name": "book-price-scraper",
+    "version": "2.0.0",
+    "description": "Tìm kiếm và so sánh giá sách trên Tiki và Fahasa",
+    "main": "index.js",
+    "author": "Moltbot Team",
+    "license": "MIT",
+    "dependencies": {
+        "axios": "^1.13.4",
+        "cheerio": "^1.0.0-rc.12"
+    }
+}
