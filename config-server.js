@@ -53,10 +53,88 @@ app.get('/api/status', (req, res) => {
         status: {
             server: 'running',
             time: new Date().toISOString(),
-            version: '2.0.0'
+            version: '2.0.0',
+            botRunning: global.botRunning || false
         }
     });
 });
+
+// Bot state
+global.botRunning = false;
+global.botStartTime = null;
+
+// API: Start bot
+app.post('/api/bot/start', (req, res) => {
+    if (global.botRunning) {
+        return res.json({ success: false, error: 'Bot đã đang chạy' });
+    }
+
+    global.botRunning = true;
+    global.botStartTime = new Date();
+    console.log('🚀 Bot started at:', global.botStartTime.toISOString());
+
+    res.json({
+        success: true,
+        message: 'Bot đã khởi động',
+        startTime: global.botStartTime.toISOString()
+    });
+});
+
+// API: Stop bot
+app.post('/api/bot/stop', (req, res) => {
+    if (!global.botRunning) {
+        return res.json({ success: false, error: 'Bot đã tắt' });
+    }
+
+    const uptime = global.botStartTime ? Math.floor((new Date() - global.botStartTime) / 1000) : 0;
+    global.botRunning = false;
+    global.botStartTime = null;
+    console.log('⏹️ Bot stopped. Uptime:', uptime, 'seconds');
+
+    res.json({
+        success: true,
+        message: 'Bot đã dừng',
+        uptime: uptime
+    });
+});
+
+// API: Get bot status
+app.get('/api/bot/status', (req, res) => {
+    let uptime = 0;
+    if (global.botRunning && global.botStartTime) {
+        uptime = Math.floor((new Date() - global.botStartTime) / 1000);
+    }
+
+    res.json({
+        success: true,
+        running: global.botRunning,
+        startTime: global.botStartTime?.toISOString() || null,
+        uptime: uptime
+    });
+});
+
+// API: Execute command (for quick commands)
+app.post('/api/command', (req, res) => {
+    const { command } = req.body;
+
+    if (!command) {
+        return res.json({ success: false, error: 'Thiếu lệnh' });
+    }
+
+    if (!global.botRunning) {
+        return res.json({ success: false, error: 'Bot chưa chạy' });
+    }
+
+    console.log('📤 Received command:', command);
+
+    // TODO: Send to OpenClaw agent
+    res.json({
+        success: true,
+        message: 'Đã nhận lệnh',
+        command: command
+    });
+});
+
 
 // Serve config UI
 app.get('/', (req, res) => {

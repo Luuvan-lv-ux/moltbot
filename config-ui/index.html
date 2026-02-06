@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moltbot - Cấu Hình OpenClaw</title>
+    <title>Moltbot - Bảng Điều Khiển</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar -->
@@ -17,8 +21,26 @@
                 <span class="logo-icon">🤖</span>
                 <span class="logo-text">Moltbot</span>
             </div>
+
+            <!-- Bot Status Card -->
+            <div class="bot-status-card" id="botStatusCard">
+                <div class="status-indicator offline" id="statusIndicator"></div>
+                <div class="status-info">
+                    <span class="status-label">Trạng thái</span>
+                    <span class="status-text" id="statusText">Đang Tắt</span>
+                </div>
+            </div>
+
             <nav class="nav-menu">
-                <a href="#model" class="nav-item active" data-section="model">
+                <a href="#dashboard" class="nav-item active" data-section="dashboard">
+                    <span class="nav-icon">🎮</span>
+                    <span>Bảng điều khiển</span>
+                </a>
+                <a href="#scripts" class="nav-item" data-section="scripts">
+                    <span class="nav-icon">📜</span>
+                    <span>Kịch bản</span>
+                </a>
+                <a href="#model" class="nav-item" data-section="model">
                     <span class="nav-icon">🧠</span>
                     <span>Model AI</span>
                 </a>
@@ -65,13 +87,194 @@
         <!-- Main Content -->
         <main class="main-content">
             <header class="header">
-                <h1 id="sectionTitle">Cấu hình Model AI</h1>
-                <p class="header-desc" id="sectionDesc">Chọn và cấu hình các model AI cho bot của bạn</p>
+                <div class="header-left">
+                    <h1 id="sectionTitle">Bảng Điều Khiển</h1>
+                    <p class="header-desc" id="sectionDesc">Quản lý và điều khiển bot của bạn</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-lg btn-success" id="startBotBtn">
+                        <span class="btn-icon">▶️</span>
+                        <span class="btn-text">Chạy Bot</span>
+                    </button>
+                    <button class="btn btn-lg btn-danger" id="stopBotBtn" style="display: none;">
+                        <span class="btn-icon">⏹️</span>
+                        <span class="btn-text">Dừng Bot</span>
+                    </button>
+                </div>
             </header>
 
             <div class="content-wrapper">
-                <!-- Model AI Section -->
-                <section id="model" class="config-section active">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="config-section active">
+                    <!-- Quick Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">🧠</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="statModel">Kimi K2.5</span>
+                                <span class="stat-label">Model đang dùng</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📜</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="statScripts">0</span>
+                                <span class="stat-label">Kịch bản</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⚡</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="statTasks">0</span>
+                                <span class="stat-label">Tác vụ hoàn thành</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">⏱️</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="statUptime">--:--:--</span>
+                                <span class="stat-label">Thời gian chạy</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>⚡ Tác vụ nhanh</h3>
+                            <p>Gửi lệnh trực tiếp cho bot</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="quick-command">
+                                <input type="text" id="quickCommand" class="form-control"
+                                    placeholder="Nhập lệnh cho bot, ví dụ: Tìm giá sách 'Đắc Nhân Tâm'...">
+                                <button class="btn btn-primary" id="sendCommandBtn">
+                                    <span>🚀</span> Gửi
+                                </button>
+                            </div>
+                            <div class="quick-command-presets">
+                                <button class="preset-btn" data-cmd="Tìm giá sách 'Đắc Nhân Tâm' trên Tiki và Fahasa">📚
+                                    Tìm giá sách</button>
+                                <button class="preset-btn" data-cmd="Kiểm tra thời tiết Hà Nội hôm nay">🌤️ Thời
+                                    tiết</button>
+                                <button class="preset-btn" data-cmd="Mở trình duyệt và vào trang google.com">🌐 Mở
+                                    browser</button>
+                                <button class="preset-btn" data-cmd="Cho tôi biết hôm nay là thứ mấy">📅 Ngày
+                                    giờ</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Console -->
+                    <div class="card console-card">
+                        <div class="card-header">
+                            <h3>📟 Console Log</h3>
+                            <div class="console-controls">
+                                <button class="btn btn-sm btn-secondary" id="clearConsole">🗑️ Xóa</button>
+                                <button class="btn btn-sm btn-secondary" id="copyConsole">📋 Copy</button>
+                            </div>
+                        </div>
+                        <div class="console-body" id="consoleOutput">
+                            <div class="console-line info">
+                                <span class="console-time">--:--:--</span>
+                                <span class="console-msg">Chào mừng đến với Moltbot! Nhấn "Chạy Bot" để bắt đầu.</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Scripts Section -->
+                <section id="scripts" class="config-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📜 Quản lý Kịch bản</h3>
+                            <p>Tạo các kịch bản để bot tự động thực hiện</p>
+                            <button class="btn btn-primary" id="newScriptBtn">
+                                <span>➕</span> Tạo kịch bản mới
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="scripts-list" id="scriptsList">
+                                <!-- Scripts will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Script Editor -->
+                    <div class="card" id="scriptEditorCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>✏️ Chỉnh sửa kịch bản</h3>
+                            <div class="editor-actions">
+                                <button class="btn btn-secondary" id="closeEditorBtn">❌ Đóng</button>
+                                <button class="btn btn-success" id="saveScriptBtn">💾 Lưu</button>
+                                <button class="btn btn-primary" id="runScriptBtn">▶️ Chạy ngay</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="scriptName">Tên kịch bản</label>
+                                <input type="text" id="scriptName" class="form-control"
+                                    placeholder="Ví dụ: Kiểm tra giá sách mỗi ngày">
+                            </div>
+                            <div class="form-group">
+                                <label for="scriptTrigger">Kích hoạt</label>
+                                <select id="scriptTrigger" class="form-control">
+                                    <option value="manual">Thủ công (nhấn nút chạy)</option>
+                                    <option value="startup">Khi bot khởi động</option>
+                                    <option value="schedule">Theo lịch (cron)</option>
+                                    <option value="message">Khi nhận tin nhắn Telegram</option>
+                                </select>
+                            </div>
+                            <div class="form-group schedule-config" style="display: none;">
+                                <label for="scriptCron">Lịch chạy (cron)</label>
+                                <input type="text" id="scriptCron" class="form-control"
+                                    placeholder="0 9 * * * (9h sáng mỗi ngày)">
+                                <small>Định dạng: phút giờ ngày tháng thứ. <a href="https://crontab.guru"
+                                        target="_blank">Tham khảo</a></small>
+                            </div>
+                            <div class="form-group message-config" style="display: none;">
+                                <label for="scriptKeyword">Từ khóa kích hoạt</label>
+                                <input type="text" id="scriptKeyword" class="form-control"
+                                    placeholder="Ví dụ: /giasach">
+                                <small>Bot sẽ chạy kịch bản khi nhận tin nhắn chứa từ khóa này</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="scriptContent">Nội dung kịch bản</label>
+                                <div class="editor-toolbar">
+                                    <button class="toolbar-btn" data-insert="Mở trình duyệt và ">🌐</button>
+                                    <button class="toolbar-btn" data-insert="Tìm kiếm ">🔍</button>
+                                    <button class="toolbar-btn" data-insert="Gửi tin nhắn Telegram: ">📱</button>
+                                    <button class="toolbar-btn" data-insert="Đợi 5 giây rồi ">⏰</button>
+                                    <button class="toolbar-btn" data-insert="Nếu thành công thì ">✅</button>
+                                    <button class="toolbar-btn" data-insert="Lưu kết quả vào file ">💾</button>
+                                </div>
+                                <textarea id="scriptContent" class="form-control code-editor" rows="12" placeholder="Viết kịch bản bằng ngôn ngữ tự nhiên tiếng Việt.
+
+Ví dụ:
+1. Mở trình duyệt và vào trang tiki.vn
+2. Tìm kiếm sản phẩm 'Đắc Nhân Tâm'
+3. Lấy giá của 5 sản phẩm đầu tiên
+4. So sánh với giá trên Fahasa
+5. Gửi kết quả qua Telegram cho tôi
+
+Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Ví dụ kịch bản có sẵn</label>
+                                <div class="example-scripts">
+                                    <button class="example-btn" data-example="price-check">📊 So sánh giá sách</button>
+                                    <button class="example-btn" data-example="daily-news">📰 Tin tức hàng ngày</button>
+                                    <button class="example-btn" data-example="auto-reply">💬 Trả lời tự động</button>
+                                    <button class="example-btn" data-example="web-scrape">🕷️ Thu thập dữ liệu
+                                        web</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Model AI Section (giữ nguyên từ phiên bản cũ) -->
+                <section id="model" class="config-section">
                     <div class="card">
                         <div class="card-header">
                             <h3>🎯 Model Chính</h3>
@@ -82,15 +285,19 @@
                                 <label for="primaryModel">Model chính</label>
                                 <select id="primaryModel" class="form-control">
                                     <optgroup label="🌙 Moonshot (Kimi)">
-                                        <option value="moonshot/kimi-k2.5" selected>Kimi K2.5 - Multimodal, 256K context</option>
-                                        <option value="moonshot/kimi-k2-0905-Preview">Kimi K2 0905 Preview - Agentic</option>
+                                        <option value="moonshot/kimi-k2.5" selected>Kimi K2.5 - Multimodal, 256K context
+                                        </option>
+                                        <option value="moonshot/kimi-k2-0905-Preview">Kimi K2 0905 Preview - Agentic
+                                        </option>
                                         <option value="moonshot/kimi-k2-turbo-preview">Kimi K2 Turbo - Nhanh</option>
-                                        <option value="moonshot/kimi-k2-thinking">Kimi K2 Thinking - Suy luận sâu</option>
+                                        <option value="moonshot/kimi-k2-thinking">Kimi K2 Thinking - Suy luận sâu
+                                        </option>
                                         <option value="moonshot/kimi-k2-thinking-turbo">Kimi K2 Thinking Turbo</option>
                                         <option value="moonshot/moonshot-v1-128k">Moonshot V1 128K</option>
                                     </optgroup>
                                     <optgroup label="🔷 Google (Gemma)">
-                                        <option value="google/models/gemma-3-27b-it">Gemma 3 27B IT - 128K context</option>
+                                        <option value="google/models/gemma-3-27b-it">Gemma 3 27B IT - 128K context
+                                        </option>
                                     </optgroup>
                                 </select>
                                 <small>Model mạnh nhất nên dùng cho tác vụ phức tạp</small>
@@ -107,14 +314,17 @@
                             <div class="form-group">
                                 <label for="moonshotApiKey">API Key</label>
                                 <div class="input-group">
-                                    <input type="password" id="moonshotApiKey" class="form-control" placeholder="sk-..." value="">
+                                    <input type="password" id="moonshotApiKey" class="form-control" placeholder="sk-..."
+                                        value="">
                                     <button type="button" class="btn btn-icon toggle-password">👁️</button>
                                 </div>
-                                <small>Lấy tại <a href="https://platform.moonshot.ai" target="_blank">platform.moonshot.ai</a></small>
+                                <small>Lấy tại <a href="https://platform.moonshot.ai"
+                                        target="_blank">platform.moonshot.ai</a></small>
                             </div>
                             <div class="form-group">
                                 <label for="moonshotBaseUrl">Base URL</label>
-                                <input type="text" id="moonshotBaseUrl" class="form-control" value="https://api.moonshot.cn/v1">
+                                <input type="text" id="moonshotBaseUrl" class="form-control"
+                                    value="https://api.moonshot.cn/v1">
                             </div>
                         </div>
                     </div>
@@ -127,14 +337,17 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="googleProxyUrl">Proxy URL</label>
-                                <input type="text" id="googleProxyUrl" class="form-control" value="http://localhost:3000/v1beta">
+                                <input type="text" id="googleProxyUrl" class="form-control"
+                                    value="http://localhost:3000/v1beta">
                                 <small>URL của google-proxy.js chạy local</small>
                             </div>
                             <div class="form-group">
                                 <label>Google API Keys (để trong file .env)</label>
                                 <div id="googleKeysContainer">
                                     <div class="key-item">
-                                        <input type="text" class="form-control google-key" placeholder="GOOGLE_API_KEY_1" disabled value="Được quản lý trong file .env">
+                                        <input type="text" class="form-control google-key"
+                                            placeholder="GOOGLE_API_KEY_1" disabled
+                                            value="Được quản lý trong file .env">
                                     </div>
                                 </div>
                                 <small class="text-warning">⚠️ Các key được quản lý trong file .env để bảo mật</small>
@@ -161,19 +374,22 @@
                             <div class="form-group">
                                 <label for="telegramToken">Bot Token</label>
                                 <div class="input-group">
-                                    <input type="password" id="telegramToken" class="form-control" placeholder="123456789:ABC...">
+                                    <input type="password" id="telegramToken" class="form-control"
+                                        placeholder="123456789:ABC...">
                                     <button type="button" class="btn btn-icon toggle-password">👁️</button>
                                 </div>
                                 <small>Lấy từ <a href="https://t.me/BotFather" target="_blank">@BotFather</a></small>
                             </div>
                             <div class="form-group">
                                 <label for="telegramAllowedUsers">Người dùng được phép (để trống = tất cả)</label>
-                                <input type="text" id="telegramAllowedUsers" class="form-control" placeholder="user1, user2, user3">
+                                <input type="text" id="telegramAllowedUsers" class="form-control"
+                                    placeholder="user1, user2, user3">
                                 <small>Danh sách username Telegram, cách nhau bởi dấu phẩy</small>
                             </div>
                             <div class="form-group">
                                 <label for="telegramAdminUsers">Admin (quyền cao nhất)</label>
-                                <input type="text" id="telegramAdminUsers" class="form-control" placeholder="admin1, admin2">
+                                <input type="text" id="telegramAdminUsers" class="form-control"
+                                    placeholder="admin1, admin2">
                                 <small>Có thể thực thi lệnh hệ thống</small>
                             </div>
                         </div>
@@ -198,14 +414,17 @@
                             </div>
                             <div class="form-group">
                                 <label for="gatewayPort">Port</label>
-                                <input type="number" id="gatewayPort" class="form-control" value="18789" min="1024" max="65535">
+                                <input type="number" id="gatewayPort" class="form-control" value="18789" min="1024"
+                                    max="65535">
                             </div>
                             <div class="form-group">
                                 <label for="gatewayToken">Token xác thực</label>
                                 <div class="input-group">
-                                    <input type="password" id="gatewayToken" class="form-control" placeholder="Token bảo mật...">
+                                    <input type="password" id="gatewayToken" class="form-control"
+                                        placeholder="Token bảo mật...">
                                     <button type="button" class="btn btn-icon toggle-password">👁️</button>
-                                    <button type="button" class="btn btn-secondary" id="generateToken">🔄 Tạo mới</button>
+                                    <button type="button" class="btn btn-secondary" id="generateToken">🔄 Tạo
+                                        mới</button>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -230,11 +449,13 @@
                             <div class="form-row">
                                 <div class="form-group half">
                                     <label for="maxConcurrent">Số tác vụ đồng thời tối đa</label>
-                                    <input type="number" id="maxConcurrent" class="form-control" value="4" min="1" max="16">
+                                    <input type="number" id="maxConcurrent" class="form-control" value="4" min="1"
+                                        max="16">
                                 </div>
                                 <div class="form-group half">
                                     <label for="subagentsConcurrent">Subagents đồng thời</label>
-                                    <input type="number" id="subagentsConcurrent" class="form-control" value="8" min="1" max="32">
+                                    <input type="number" id="subagentsConcurrent" class="form-control" value="8" min="1"
+                                        max="32">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -246,7 +467,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="bootstrapMaxChars">Bootstrap Max Chars</label>
-                                <input type="number" id="bootstrapMaxChars" class="form-control" value="4000" min="1000" max="10000">
+                                <input type="number" id="bootstrapMaxChars" class="form-control" value="4000" min="1000"
+                                    max="10000">
                                 <small>Số ký tự tối đa trong bootstrap context</small>
                             </div>
                             <div class="form-group">
@@ -279,7 +501,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="memoryMaxTokens">Memory Max Tokens</label>
-                                <input type="number" id="memoryMaxTokens" class="form-control" value="100000" min="10000" max="500000">
+                                <input type="number" id="memoryMaxTokens" class="form-control" value="100000"
+                                    min="10000" max="500000">
                             </div>
                             <div class="form-group">
                                 <label class="toggle-label">
@@ -404,7 +627,8 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="maxRequests">Giới hạn request/phút</label>
-                                <input type="number" id="maxRequests" class="form-control" value="60" min="1" max="1000">
+                                <input type="number" id="maxRequests" class="form-control" value="60" min="1"
+                                    max="1000">
                                 <small>Bảo vệ khỏi spam và lạm dụng</small>
                             </div>
                             <div class="form-group">
@@ -413,7 +637,8 @@
                                     <span class="toggle-switch"></span>
                                     <span>Cho phép thực thi lệnh Shell ⚠️</span>
                                 </label>
-                                <small class="text-warning">Cẩn thận: Bot có thể chạy bất kỳ lệnh nào trên hệ thống</small>
+                                <small class="text-warning">Cẩn thận: Bot có thể chạy bất kỳ lệnh nào trên hệ
+                                    thống</small>
                             </div>
                             <div class="form-group">
                                 <label class="toggle-label warning">
@@ -471,4 +696,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
