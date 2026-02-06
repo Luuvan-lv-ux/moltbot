@@ -16,7 +16,15 @@ const app = express();
 const port = process.env.CONFIG_SERVER_PORT || 8080;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'config-ui')));
+app.use(express.static(path.join(__dirname, 'config-ui'), {
+    etag: false,
+    lastModified: false,
+    setHeaders: (res, path) => {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+    }
+}));
 
 // CORS
 app.use((req, res, next) => {
@@ -88,9 +96,17 @@ app.post('/api/bot/config', (req, res) => {
                     openclawConfig.agents.defaults.model = { primary: newModel };
                     openclawConfig.agents.defaults.models = { [newModel]: {} };
 
+                    // CRITICAL: Inject Identity into System Prompt
+                    const friendlyName = newModel.split('/').pop().replace(/-/g, ' ').toUpperCase();
+                    openclawConfig.agents.systemPrompt = `Bạn là Moltbot, trợ lý AI thông minh.
+CẤU HÌNH HIỆN TẠI:
+- Model Architecture: ${friendlyName} (${newModel})
+- Nhiệm vụ: Hỗ trợ người dùng TẬN TÂM và CHÍNH XÁC.
+- Tuyệt đối TRUNG THỰC về model đang chạy. Nếu người dùng hỏi bạn dùng model gì, hãy trả lời chính xác là ${friendlyName}.`;
+
                     fs.writeFileSync(openclawConfigPath, JSON.stringify(openclawConfig, null, 2));
-                    console.log('[DEBUG] Successfully synced model to OpenClaw');
-                    addLog('success', `🔄 Đã đồng bộ Model sang OpenClaw: ${newModel}`);
+                    console.log('[DEBUG] Successfully synced model & identity to OpenClaw');
+                    addLog('success', `🔄 Đã đồng bộ Model & Danh tính: ${newModel}`);
                 }
             } catch (syncErr) {
                 console.error('[DEBUG] Sync error:', syncErr);

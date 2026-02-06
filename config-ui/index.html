@@ -181,6 +181,50 @@
                         </div>
                     </div>
 
+                    <!-- Model Selection Card (CRITICAL FIX) -->
+                    <div class="card" style="margin-bottom: 24px;">
+                        <div class="card-header">
+                            <h3>🧠 Model Chính</h3>
+                            <p>Model sẽ được sử dụng mặc định cho tất cả các tác vụ</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="primaryModel">Chọn Model AI</label>
+                                <select id="primaryModel" class="form-control">
+                                    <optgroup label="✨ Google Antigravity (Đã đăng nhập)">
+                                        <option value="google-antigravity/gemini-3-pro-high">Gemini 3 Pro (High)
+                                        </option>
+                                        <option value="google-antigravity/gemini-3-pro-low">Gemini 3 Pro (Low)</option>
+                                        <option value="google-antigravity/gemini-3-flash" selected>Gemini 3 Flash
+                                        </option>
+                                        <option value="google-antigravity/claude-sonnet-4.5">Claude Sonnet 4.5</option>
+                                        <option value="google-antigravity/claude-sonnet-4.5-thinking">Claude Sonnet 4.5
+                                            (Thinking)</option>
+                                        <option value="google-antigravity/claude-opus-4.5-thinking">Claude Opus 4.5
+                                            (Thinking)</option>
+                                    </optgroup>
+                                    <optgroup label="🌙 Moonshot (Kimi)">
+                                        <option value="moonshot/kimi-k2.5">Kimi K2.5 - Multimodal, 256K context</option>
+                                        <option value="moonshot/kimi-k2-05os-preview">Kimi K2 O50S Preview - Agentic
+                                        </option>
+                                        <option value="moonshot/kimi-k2-turbo">Kimi K2 Turbo - Nhanh</option>
+                                        <option value="moonshot/kimi-k2-thinking">Kimi K2 Thinking - Suy luận sâu
+                                        </option>
+                                        <option value="moonshot/kimi-k2-thinking-turbo">Kimi K2 Thinking Turbo</option>
+                                        <option value="moonshot/moonshot-v1-128k">Moonshot V1 128K</option>
+                                    </optgroup>
+                                    <optgroup label="🎁 Google (Gemme)">
+                                        <option value="google/gemma-3-27b-it">Gemma 3 27B IT - 128K context</option>
+                                    </optgroup>
+                                </select>
+                                <small style="color: #999; display: block; margin-top: 8px;">
+                                    💡 Model mạnh nhất nên dùng cho tác vụ phức tạp: <strong>Claude Sonnet 4.5
+                                        (Thinking)</strong>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Quick Stats -->
                     <div class="stats-grid">
                         <div class="stat-card">
@@ -350,46 +394,7 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
 
                 <!-- Model AI Section (giữ nguyên từ phiên bản cũ) -->
                 <section id="model" class="config-section">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>🎯 Model Chính</h3>
-                            <p>Model sẽ được sử dụng mặc định cho tất cả các tác vụ</p>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="primaryModel">Model chính</label>
-                                <select id="primaryModel" class="form-control">
-                                    <optgroup label="✨ Google Antigravity (Đã đăng nhập)">
-                                        <option value="google-antigravity/gemini-3-pro-high">Gemini 3 Pro (High)
-                                        </option>
-                                        <option value="google-antigravity/gemini-3-pro-low">Gemini 3 Pro (Low)</option>
-                                        <option value="google-antigravity/gemini-3-flash">Gemini 3 Flash</option>
-                                        <option value="google-antigravity/claude-sonnet-4.5">Claude Sonnet 4.5</option>
-                                        <option value="google-antigravity/claude-sonnet-4.5-thinking">Claude Sonnet 4.5
-                                            (Thinking)</option>
-                                        <option value="google-antigravity/claude-opus-4.5-thinking">Claude Opus 4.5
-                                            (Thinking)</option>
-                                    </optgroup>
-                                    <optgroup label="🌙 Moonshot (Kimi)">
-                                        <option value="moonshot/kimi-k2.5" selected>Kimi K2.5 - Multimodal, 256K context
-                                        </option>
-                                        <option value="moonshot/kimi-k2-0905-Preview">Kimi K2 0905 Preview - Agentic
-                                        </option>
-                                        <option value="moonshot/kimi-k2-turbo-preview">Kimi K2 Turbo - Nhanh</option>
-                                        <option value="moonshot/kimi-k2-thinking">Kimi K2 Thinking - Suy luận sâu
-                                        </option>
-                                        <option value="moonshot/kimi-k2-thinking-turbo">Kimi K2 Thinking Turbo</option>
-                                        <option value="moonshot/moonshot-v1-128k">Moonshot V1 128K</option>
-                                    </optgroup>
-                                    <optgroup label="🔷 Google (Gemma)">
-                                        <option value="google/models/gemma-3-27b-it">Gemma 3 27B IT - 128K context
-                                        </option>
-                                    </optgroup>
-                                </select>
-                                <small>Model mạnh nhất nên dùng cho tác vụ phức tạp</small>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <div class="card">
                         <div class="card-header">
@@ -1325,7 +1330,7 @@ Nếu không tìm thấy sản phẩm, thông báo lỗi.</pre>
         <span class="toast-message">Đã lưu cấu hình!</span>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=2.3"></script>
 </body>
 
 </html>

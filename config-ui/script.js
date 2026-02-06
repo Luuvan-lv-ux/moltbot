@@ -35,7 +35,11 @@ function selectApiKeyPreset(value) {
 // ==================== BOT CONTROL FUNCTIONS ====================
 async function saveAndSyncConfig() {
     const config = buildConfig();
-    console.log('[DEBUG] Saving config with model:', config.agents?.defaults?.model?.primary);
+    const model = config.agents?.defaults?.model?.primary;
+    // DEBUG ALERT
+    alert('🔍 DEBUG: Hệ thống chuẩn bị lưu Model:\n' + model + '\n\nNếu thấy đúng model anh chọn thì OK!');
+
+    console.log('[DEBUG] Saving config with model:', model);
     try {
         const res = await fetch(`${API_BASE}/api/bot/config`, {
             method: 'POST',
