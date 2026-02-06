@@ -73,7 +73,32 @@ moltbot/
         └── package.json
 ```
 
-## 🌙 Các Model Moonshot Kimi
+## 📱 Telegram Mini App
+
+Để cấu hình bot từ điện thoại mà không cần máy tính:
+
+### 1. Chạy Config Server
+
+```bash
+npm run config
+```
+
+Server sẽ chạy tại `http://localhost:8080`
+
+### 2. Tạo Mini App trong BotFather
+
+1. Mở @BotFather trên Telegram
+2. Gửi `/newapp`
+3. Chọn bot của bạn
+4. Nhập URL: `https://your-server.com/telegram`
+5. Done! Giờ có thể mở Mini App từ menu bot
+
+### 3. Deploy lên server
+
+Để truy cập từ mọi nơi, deploy `config-server.js` lên Render/Koyeb và cập nhật URL trong BotFather.
+
+---
+
 
 | Model | Context | Đặc điểm |
 |-------|---------|----------|

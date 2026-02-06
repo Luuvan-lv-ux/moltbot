@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Moltbot - Cấu Hình</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --tg-theme-bg-color: #1a1a1a;
+            --tg-theme-text-color: #ffffff;
+            --tg-theme-hint-color: #999999;
+            --tg-theme-button-color: #6366f1;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .header p {
+            color: var(--tg-theme-hint-color);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .section {
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--tg-theme-hint-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 16px;
+            background: var(--tg-theme-bg-color);
+            border: 1px solid #333;
+            border-radius: 12px;
+            color: var(--tg-theme-text-color);
+            -webkit-appearance: none;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--tg-theme-button-color);
+        }
+
+        select.form-control {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .toggle-row:last-child {
+            border-bottom: none;
+        }
+
+        .toggle-info h4 {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .toggle-info p {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color);
+            margin-top: 2px;
+        }
+
+        .toggle-switch {
+            width: 52px;
+            height: 32px;
+            background: #444;
+            border-radius: 16px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            background: white;
+            border-radius: 50%;
+            top: 3px;
+            left: 3px;
+            transition: transform 0.2s;
+        }
+
+        .toggle-switch.active {
+            background: var(--tg-theme-button-color);
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-text-color);
+            border: 1px solid #444;
+        }
+
+        .status-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .status-card.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .status-icon {
+            font-size: 24px;
+        }
+
+        .status-text h4 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .status-text p {
+            font-size: 12px;
+            color: var(--tg-theme-hint-color);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #333;
+            border-top-color: var(--tg-theme-button-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <div class="loading" id="loadingScreen">
+            <div class="loading-spinner"></div>
+            <p>Đang tải cấu hình...</p>
+        </div>
+
+        <div id="mainContent" style="display: none;">
+            <div class="header">
+                <h1>🤖 Moltbot</h1>
+                <p>Cấu hình nhanh từ Telegram</p>
+            </div>
+
+            <div class="status-card" id="statusCard">
+                <span class="status-icon">✅</span>
+                <div class="status-text">
+                    <h4>Đang hoạt động</h4>
+                    <p id="statusTime">Cập nhật lúc --:--</p>
+                </div>
+            </div>
+
+            <!-- Model Section -->
+            <div class="section">
+                <div class="section-title">🧠 Model AI</div>
+                <div class="form-group">
+                    <label>Model chính</label>
+                    <select id="primaryModel" class="form-control">
+                        <optgroup label="Moonshot (Kimi)">
+                            <option value="moonshot/kimi-k2.5">Kimi K2.5 (Mới nhất)</option>
+                            <option value="moonshot/kimi-k2-turbo-preview">Kimi K2 Turbo</option>
+                            <option value="moonshot/kimi-k2-thinking">Kimi K2 Thinking</option>
+                        </optgroup>
+                        <optgroup label="Google">
+                            <option value="google/models/gemma-3-27b-it">Gemma 3 27B</option>
+                        </optgroup>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Plugins Section -->
+            <div class="section">
+                <div class="section-title">🔌 Plugins</div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>📱 Telegram</h4>
+                        <p>Nhận/gửi tin nhắn qua Telegram</p>
+                    </div>
+                    <div class="toggle-switch active" id="toggleTelegram"></div>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>🌐 Browser</h4>
+                        <p>Tự động hóa trình duyệt</p>
+                    </div>
+                    <div class="toggle-switch active" id="toggleBrowser"></div>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>⏰ Scheduler</h4>
+                        <p>Lên lịch tác vụ tự động</p>
+                    </div>
+                    <div class="toggle-switch active" id="toggleScheduler"></div>
+                </div>
+            </div>
+
+            <!-- Agent Settings -->
+            <div class="section">
+                <div class="section-title">🤝 Agent</div>
+                <div class="form-group">
+                    <label>Số tác vụ đồng thời</label>
+                    <select id="maxConcurrent" class="form-control">
+                        <option value="2">2 (Tiết kiệm)</option>
+                        <option value="4" selected>4 (Cân bằng)</option>
+                        <option value="8">8 (Hiệu suất cao)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Độ sâu suy luận</label>
+                    <select id="reasoningDepth" class="form-control">
+                        <option value="shallow">Nhanh</option>
+                        <option value="normal">Bình thường</option>
+                        <option value="deep" selected>Sâu (Chính xác)</option>
+                    </select>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>🧠 Bộ nhớ dài hạn</h4>
+                        <p>Nhớ các cuộc hội thoại trước</p>
+                    </div>
+                    <div class="toggle-switch active" id="toggleMemory"></div>
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div class="section">
+                <div class="section-title">🔒 Bảo mật</div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>⚠️ Lệnh Shell</h4>
+                        <p>Cho phép thực thi lệnh hệ thống</p>
+                    </div>
+                    <div class="toggle-switch active" id="toggleShell"></div>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>📁 Truy cập File</h4>
+                        <p>Cho phép đọc/ghi file</p>
+                    </div>
+                    <div class="toggle-switch active" id="toggleFile"></div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <button class="btn" id="saveBtn" style="margin-bottom: 12px;">
+                💾 Lưu cấu hình
+            </button>
+            <button class="btn btn-secondary" id="advancedBtn">
+                ⚙️ Cấu hình nâng cao
+            </button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Telegram WebApp integration
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+
+            // Apply Telegram theme
+            document.documentElement.style.setProperty('--tg-theme-bg-color', tg.themeParams.bg_color || '#1a1a1a');
+            document.documentElement.style.setProperty('--tg-theme-text-color', tg.themeParams.text_color || '#ffffff');
+            document.documentElement.style.setProperty('--tg-theme-hint-color', tg.themeParams.hint_color || '#999999');
+            document.documentElement.style.setProperty('--tg-theme-button-color', tg.themeParams.button_color || '#6366f1');
+            document.documentElement.style.setProperty('--tg-theme-button-text-color', tg.themeParams.button_text_color || '#ffffff');
+            document.documentElement.style.setProperty('--tg-theme-secondary-bg-color', tg.themeParams.secondary_bg_color || '#2a2a2a');
+        }
+
+        let currentConfig = {};
+
+        // Toggle switches
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('active');
+            });
+        });
+
+        // Load config
+        async function loadConfig() {
+            try {
+                const res = await fetch('/api/config');
+                const data = await res.json();
+
+                if (data.success) {
+                    currentConfig = data.config;
+                    applyConfig(currentConfig);
+                }
+
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+
+                updateStatus();
+            } catch (error) {
+                showToast('❌ Lỗi tải cấu hình');
+                document.getElementById('loadingScreen').innerHTML = '<p>❌ Không thể kết nối server</p>';
+            }
+        }
+
+        function applyConfig(config) {
+            // Model
+            if (config.agents?.defaults?.model?.primary) {
+                document.getElementById('primaryModel').value = config.agents.defaults.model.primary;
+            }
+
+            // Plugins
+            if (config.plugins?.entries) {
+                setToggle('toggleTelegram', config.plugins.entries.telegram?.enabled ?? true);
+                setToggle('toggleBrowser', config.plugins.entries.browser?.enabled ?? true);
+                setToggle('toggleScheduler', config.plugins.entries.scheduler?.enabled ?? true);
+            }
+
+            // Agent
+            if (config.agents?.defaults) {
+                document.getElementById('maxConcurrent').value = config.agents.defaults.maxConcurrent ?? 4;
+                if (config.agents.defaults.reasoning) {
+                    document.getElementById('reasoningDepth').value = config.agents.defaults.reasoning.depth ?? 'deep';
+                }
+                setToggle('toggleMemory', config.agents.defaults.memory?.enabled ?? true);
+            }
+
+            // Security
+            if (config.security) {
+                setToggle('toggleShell', config.security.allowShellCommands ?? true);
+                setToggle('toggleFile', config.security.allowFileAccess ?? true);
+            }
+        }
+
+        function setToggle(id, value) {
+            const el = document.getElementById(id);
+            if (value) {
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
+            }
+        }
+
+        function getToggle(id) {
+            return document.getElementById(id).classList.contains('active');
+        }
+
+        async function saveConfig() {
+            // Update config object
+            currentConfig.agents = currentConfig.agents || { defaults: {} };
+            currentConfig.agents.defaults.model = { primary: document.getElementById('primaryModel').value };
+            currentConfig.agents.defaults.maxConcurrent = parseInt(document.getElementById('maxConcurrent').value);
+            currentConfig.agents.defaults.memory = {
+                enabled: getToggle('toggleMemory'),
+                maxTokens: currentConfig.agents?.defaults?.memory?.maxTokens ?? 100000
+            };
+            currentConfig.agents.defaults.reasoning = {
+                enabled: true,
+                depth: document.getElementById('reasoningDepth').value
+            };
+
+            currentConfig.plugins = currentConfig.plugins || { entries: {} };
+            currentConfig.plugins.entries.telegram = { enabled: getToggle('toggleTelegram') };
+            currentConfig.plugins.entries.browser = {
+                enabled: getToggle('toggleBrowser'),
+                headless: true
+            };
+            currentConfig.plugins.entries.scheduler = { enabled: getToggle('toggleScheduler') };
+
+            currentConfig.security = currentConfig.security || {};
+            currentConfig.security.allowShellCommands = getToggle('toggleShell');
+            currentConfig.security.allowFileAccess = getToggle('toggleFile');
+
+            try {
+                const res = await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(currentConfig)
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showToast('✅ Đã lưu cấu hình!');
+                    if (tg) {
+                        tg.HapticFeedback.notificationOccurred('success');
+                    }
+                } else {
+                    showToast('❌ ' + data.error);
+                }
+            } catch (error) {
+                showToast('❌ Lỗi lưu cấu hình');
+            }
+        }
+
+        async function updateStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                if (data.success) {
+                    const time = new Date(data.status.time).toLocaleTimeString('vi-VN');
+                    document.getElementById('statusTime').textContent = 'Cập nhật lúc ' + time;
+                }
+            } catch (error) {
+                document.getElementById('statusCard').classList.add('error');
+                document.querySelector('#statusCard .status-icon').textContent = '❌';
+                document.querySelector('#statusCard h4').textContent = 'Mất kết nối';
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // Event listeners
+        document.getElementById('saveBtn').addEventListener('click', saveConfig);
+        document.getElementById('advancedBtn').addEventListener('click', () => {
+            if (tg) {
+                tg.openLink(window.location.origin);
+            } else {
+                window.open('/', '_blank');
+            }
+        });
+
+        // Initialize
+        loadConfig();
+        setInterval(updateStatus, 30000);
+    </script>
+</body>
+
+</html>

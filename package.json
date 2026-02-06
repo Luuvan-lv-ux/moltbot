@@ -5,6 +5,7 @@
     "main": "google-proxy.js",
     "scripts": {
         "proxy": "node google-proxy.js",
+        "config": "node config-server.js",
         "test": "node skills/book-price-scraper/index.js \"Đắc Nhân Tâm\""
     },
     "author": "Moltbot Team",
