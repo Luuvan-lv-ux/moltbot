@@ -1,0 +1,51 @@
+{
+    "agents": {
+        "defaults": {
+            "workspace": "./workspace",
+            "model": {
+                "primary": "google-antigravity/gemini-3-flash"
+            },
+            "models": {
+                "google-antigravity/gemini-3-flash": {},
+                "google-antigravity/gemini-3-pro-high": {},
+                "google-antigravity/claude-sonnet-4.5": {},
+                "google-antigravity/claude-opus-4.5-thinking": {},
+                "moonshot/kimi-k2.5": {}
+            },
+            "compaction": {
+                "mode": "safeguard"
+            },
+            "maxConcurrent": 4,
+            "subagents": {
+                "maxConcurrent": 8
+            }
+        }
+    },
+    "telegram": {
+        "enabled": true,
+        "instances": [
+            {
+                "name": "default",
+                "token": "${TELEGRAM_BOT_TOKEN}",
+                "adminIds": []
+            }
+        ]
+    },
+    "gateway": {
+        "port": 18789,
+        "host": "127.0.0.1",
+        "token": "${OPENCLAW_GATEWAY_TOKEN}"
+    },
+    "security": {
+        "maxRequestsPerMinute": 60,
+        "allowShellCommands": true,
+        "allowFileAccess": true,
+        "allowEmail": false
+    },
+    "logging": {
+        "level": "info",
+        "file": "./logs/openclaw.log",
+        "console": true
+    },
+    "scripts": []
+}

@@ -96,6 +96,45 @@
                     <h1 id="sectionTitle">Bảng Điều Khiển</h1>
                     <p class="header-desc" id="sectionDesc">Quản lý và điều khiển bot của bạn</p>
                 </div>
+                <div class="header-center">
+                    <div class="auth-status" id="authStatus">
+                        <div class="auth-logged-out" id="authLoggedOut">
+                            <button class="btn btn-google" id="googleLoginBtn" onclick="handleGoogleLogin()">
+                                <svg class="google-icon" viewBox="0 0 24 24" width="20" height="20">
+                                    <path fill="#4285F4"
+                                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                    <path fill="#34A853"
+                                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                    <path fill="#FBBC05"
+                                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                    <path fill="#EA4335"
+                                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                                </svg>
+                                <span>Đăng nhập Google</span>
+                            </button>
+                        </div>
+                        <div class="auth-logged-in" id="authLoggedIn" style="display: none;">
+                            <div class="auth-account" onclick="toggleAuthMenu()">
+                                <img class="auth-avatar" id="authAvatar"
+                                    src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff"
+                                    alt="Avatar">
+                                <div class="auth-info">
+                                    <span class="auth-name" id="authName">Đang tải...</span>
+                                    <span class="auth-email" id="authEmail">...</span>
+                                </div>
+                                <span class="auth-arrow">▼</span>
+                            </div>
+                            <div class="auth-dropdown" id="authDropdown">
+                                <button class="dropdown-item" onclick="switchAccount()">
+                                    <span>🔄</span> Đổi tài khoản
+                                </button>
+                                <button class="dropdown-item" onclick="handleLogout()">
+                                    <span>🚪</span> Đăng xuất
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="header-right">
                     <button class="btn btn-lg btn-success" id="startBotBtn">
                         <span class="btn-icon">▶️</span>
@@ -111,12 +150,43 @@
             <div class="content-wrapper">
                 <!-- Dashboard Section -->
                 <section id="dashboard" class="config-section active">
+                    <!-- CLI Toolbar -->
+                    <div class="cli-toolbar">
+                        <div class="cli-group">
+                            <span class="cli-label">Điều khiển:</span>
+                            <button class="btn btn-success" id="saveConfigBtn" onclick="saveAndSyncConfig()">
+                                💾 Lưu Cấu Hình
+                            </button>
+                            <button class="btn btn-primary" id="startBotBtn" onclick="startBot()">
+                                🚀 Chạy Bot
+                            </button>
+                            <button class="btn btn-danger" id="stopBotBtn" onclick="stopBot()">
+                                ⏹️ Dừng Bot
+                            </button>
+                        </div>
+                        <div class="cli-group">
+                            <span class="cli-label">Công cụ nhanh:</span>
+                            <button class="btn btn-outline" onclick="runCliCommand('doctor')">
+                                🚑 Doctor
+                            </button>
+                            <button class="btn btn-outline" onclick="runCliCommand('logs')">
+                                📋 Logs
+                            </button>
+                            <button class="btn btn-outline" onclick="runCliCommand('pairing', ['approve', 'telegram'])">
+                                🔗 Pairing
+                            </button>
+                            <button class="btn btn-outline btn-warning" onclick="runCliCommand('delete', ['main'])">
+                                🧹 Clean Agent
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Quick Stats -->
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-icon">🧠</div>
                             <div class="stat-info">
-                                <span class="stat-value" id="statModel">Kimi K2.5</span>
+                                <span class="stat-value" id="statModel">Đang tải...</span>
                                 <span class="stat-label">Model đang dùng</span>
                             </div>
                         </div>
@@ -289,6 +359,17 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                             <div class="form-group">
                                 <label for="primaryModel">Model chính</label>
                                 <select id="primaryModel" class="form-control">
+                                    <optgroup label="✨ Google Antigravity (Đã đăng nhập)">
+                                        <option value="google-antigravity/gemini-3-pro-high">Gemini 3 Pro (High)
+                                        </option>
+                                        <option value="google-antigravity/gemini-3-pro-low">Gemini 3 Pro (Low)</option>
+                                        <option value="google-antigravity/gemini-3-flash">Gemini 3 Flash</option>
+                                        <option value="google-antigravity/claude-sonnet-4.5">Claude Sonnet 4.5</option>
+                                        <option value="google-antigravity/claude-sonnet-4.5-thinking">Claude Sonnet 4.5
+                                            (Thinking)</option>
+                                        <option value="google-antigravity/claude-opus-4.5-thinking">Claude Opus 4.5
+                                            (Thinking)</option>
+                                    </optgroup>
                                     <optgroup label="🌙 Moonshot (Kimi)">
                                         <option value="moonshot/kimi-k2.5" selected>Kimi K2.5 - Multimodal, 256K context
                                         </option>
@@ -317,10 +398,19 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                         </div>
                         <div class="card-body">
                             <div class="form-group">
+                                <label for="moonshotKeyPreset">Chọn API Key có sẵn</label>
+                                <select id="moonshotKeyPreset" class="form-control"
+                                    onchange="selectApiKeyPreset(this.value)">
+                                    <option value="">-- Chọn hoặc nhập mới --</option>
+                                    <option value="sk-UrQA0RxVXSVp0KhvJSCD0I6NzEZfpLUSwZswj1dxPR54zw01">🌙 kimi 2.5 acc
+                                        1 test</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="moonshotApiKey">API Key</label>
                                 <div class="input-group">
                                     <input type="password" id="moonshotApiKey" class="form-control" placeholder="sk-..."
-                                        value="">
+                                        value="sk-UrQA0RxVXSVp0KhvJSCD0I6NzEZfpLUSwZswj1dxPR54zw01">
                                     <button type="button" class="btn btn-icon toggle-password">👁️</button>
                                 </div>
                                 <small>Lấy tại <a href="https://platform.moonshot.ai"
@@ -371,16 +461,26 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                         <div class="card-body">
                             <div class="form-group">
                                 <label class="toggle-label">
+                                    <span class="toggle-text">Kích hoạt Telegram</span>
                                     <input type="checkbox" id="telegramEnabled" checked>
                                     <span class="toggle-switch"></span>
-                                    <span>Kích hoạt Telegram</span>
                                 </label>
+                            </div>
+                            <div class="form-group">
+                                <label for="telegramTokenPreset">Chọn Bot có sẵn</label>
+                                <select id="telegramTokenPreset" class="form-control"
+                                    onchange="selectBotPreset(this.value)">
+                                    <option value="">-- Chọn hoặc nhập mới --</option>
+                                    <option value="7513667533:AAGrdddrdnWpxY7ZnlAo-7UT8Ov9GeJLi0A">🤖 Bot Diệp Phàm
+                                    </option>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="telegramToken">Bot Token</label>
                                 <div class="input-group">
                                     <input type="password" id="telegramToken" class="form-control"
-                                        placeholder="123456789:ABC...">
+                                        placeholder="123456789:ABC..."
+                                        value="7513667533:AAGrdddrdnWpxY7ZnlAo-7UT8Ov9GeJLi0A">
                                     <button type="button" class="btn btn-icon toggle-password">👁️</button>
                                 </div>
                                 <small>Lấy từ <a href="https://t.me/BotFather" target="_blank">@BotFather</a></small>
@@ -465,9 +565,9 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="toggle-label">
+                                    <span class="toggle-text">Bỏ qua Bootstrap (khởi động nhanh hơn)</span>
                                     <input type="checkbox" id="skipBootstrap">
                                     <span class="toggle-switch"></span>
-                                    <span>Bỏ qua Bootstrap (khởi động nhanh hơn)</span>
                                 </label>
                             </div>
                             <div class="form-group">
@@ -499,9 +599,9 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                         <div class="card-body">
                             <div class="form-group">
                                 <label class="toggle-label">
+                                    <span class="toggle-text">Kích hoạt bộ nhớ dài hạn</span>
                                     <input type="checkbox" id="memoryEnabled" checked>
                                     <span class="toggle-switch"></span>
-                                    <span>Kích hoạt bộ nhớ dài hạn</span>
                                 </label>
                             </div>
                             <div class="form-group">
@@ -511,9 +611,9 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="toggle-label">
+                                    <span class="toggle-text">Kích hoạt chế độ suy luận</span>
                                     <input type="checkbox" id="reasoningEnabled" checked>
                                     <span class="toggle-switch"></span>
-                                    <span>Kích hoạt chế độ suy luận</span>
                                 </label>
                             </div>
                             <div class="form-group">
@@ -523,6 +623,59 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                                     <option value="normal">Normal</option>
                                     <option value="deep" selected>Deep (chính xác)</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="systemPrompt">Luật Riêng Cho Bot (System Prompt)</label>
+                                <textarea id="systemPrompt" class="form-control" rows="3"
+                                    placeholder="Ví dụ: Bạn là trợ lý vui tính, luôn gọi tôi là Sếp..."></textarea>
+                                <small>Bot sẽ luôn tuân thủ các luật này trong mọi câu trả lời.</small>
+                            </div>
+                            <div class="form-group">
+                                <label for="memoryMaxTokens">Bộ Nhớ & Tiết Kiệm Checkpoint</label>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span id="memoryValueLabel">Trung bình (100k tokens)</span>
+                                </div>
+                                <input type="range" class="form-control-range" id="memoryMaxTokens" min="10000"
+                                    max="1000000" step="10000" value="100000"
+                                    oninput="document.getElementById('memoryValueLabel').textContent = (this.value/1000) + 'k tokens'">
+                                <small>Kéo thấp xuống để tiết kiệm Quota. Kéo cao lên để Bot nhớ lâu hơn.</small>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Google Accounts Section -->
+                <section id="google-accounts" class="config-section">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3>✨ Tài Khoản Google (Multi-Account)</h3>
+                                <p>Quản lý nhiều tài khoản để tăng Quota</p>
+                            </div>
+                            <button class="btn btn-sm btn-primary" onclick="handleGoogleLogin()">➕ Thêm Tài Khoản
+                                Mới</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="account-list" id="googleAccountList">
+                                <div class="alert alert-info">
+                                    <div class="d-flex align-items-center">
+                                        <div class="mr-3" style="font-size: 24px;">👤</div>
+                                        <div>
+                                            <strong>Tài khoản hiện tại</strong><br>
+                                            <span class="text-muted" id="currentGoogleAccount">Đang tải...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="quota-meter mt-3">
+                                    <label>Ước lượng Quota (Requests)</label>
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 10%"
+                                            aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"
+                                            id="quotaProgressBar">An toàn</div>
+                                    </div>
+                                    <small class="text-muted d-block mt-1">Tự động chuyển tài khoản khi hết quota (Tính
+                                        năng đang phát triển)</small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -582,9 +735,9 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                         <div class="card-body">
                             <div class="form-group">
                                 <label class="toggle-label">
+                                    <span class="toggle-text">Headless Mode (không hiện cửa sổ)</span>
                                     <input type="checkbox" id="browserHeadless" checked>
                                     <span class="toggle-switch"></span>
-                                    <span>Headless Mode (không hiện cửa sổ)</span>
                                 </label>
                             </div>
                         </div>
@@ -613,9 +766,9 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="toggle-label">
+                                    <span class="toggle-text">Tự động load skills khi khởi động</span>
                                     <input type="checkbox" id="autoloadSkills" checked>
                                     <span class="toggle-switch"></span>
-                                    <span>Tự động load skills khi khởi động</span>
                                 </label>
                             </div>
                         </div>
@@ -638,20 +791,118 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                             </div>
                             <div class="form-group">
                                 <label class="toggle-label warning">
+                                    <span class="toggle-text">Cho phép thực thi lệnh Shell ⚠️</span>
                                     <input type="checkbox" id="allowShellCommands" checked>
                                     <span class="toggle-switch"></span>
-                                    <span>Cho phép thực thi lệnh Shell ⚠️</span>
                                 </label>
                                 <small class="text-warning">Cẩn thận: Bot có thể chạy bất kỳ lệnh nào trên hệ
                                     thống</small>
                             </div>
                             <div class="form-group">
                                 <label class="toggle-label warning">
+                                    <span class="toggle-text">Cho phép truy cập File ⚠️</span>
                                     <input type="checkbox" id="allowFileAccess" checked>
                                     <span class="toggle-switch"></span>
-                                    <span>Cho phép truy cập File ⚠️</span>
                                 </label>
                                 <small class="text-warning">Bot có thể đọc/ghi file trên hệ thống</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label warning">
+                                    <span class="toggle-text">Cho phép Gửi Email 📧</span>
+                                    <input type="checkbox" id="allowEmail" checked>
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small class="text-warning">Cho phép Bot gửi email từ tài khoản của bạn (cần cấu hình
+                                    SMTP)</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép truy cập Internet 🌐</span>
+                                    <input type="checkbox" id="allowInternet" checked>
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể duyệt web, gọi API, tải dữ liệu</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép chụp/quay màn hình 🖥️</span>
+                                    <input type="checkbox" id="allowScreenCapture" checked>
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể chụp ảnh hoặc quay video màn hình</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép sử dụng Webcam 📷</span>
+                                    <input type="checkbox" id="allowCamera">
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể truy cập camera để chụp ảnh/quay video</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép sử dụng Microphone 🎤</span>
+                                    <input type="checkbox" id="allowMicrophone">
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể ghi âm hoặc nhận lệnh thoại</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép phát âm thanh 🔊</span>
+                                    <input type="checkbox" id="allowAudioOutput" checked>
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể phát âm thanh, thông báo, text-to-speech</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép truy cập Clipboard 📋</span>
+                                    <input type="checkbox" id="allowClipboard" checked>
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể đọc/ghi vào clipboard của bạn</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép gửi Thông báo 🔔</span>
+                                    <input type="checkbox" id="allowNotifications" checked>
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể hiển thị thông báo desktop/push</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép truy cập Vị trí 📍</span>
+                                    <input type="checkbox" id="allowLocation">
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể xác định vị trí của bạn (GPS)</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label warning">
+                                    <span class="toggle-text">Cho phép mua sắm/thanh toán 💳 ⚠️</span>
+                                    <input type="checkbox" id="allowPayments">
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small class="text-warning">Bot có thể thực hiện thanh toán (cần xác nhận mỗi
+                                    lần)</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép điều khiển Bluetooth 📶</span>
+                                    <input type="checkbox" id="allowBluetooth">
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể kết nối thiết bị Bluetooth</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="toggle-label">
+                                    <span class="toggle-text">Cho phép điều khiển USB 🔌</span>
+                                    <input type="checkbox" id="allowUSB">
+                                    <span class="toggle-switch"></span>
+                                </label>
+                                <small>Bot có thể truy cập thiết bị USB được kết nối</small>
                             </div>
                         </div>
                     </div>
@@ -685,6 +936,51 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                                     <span class="toggle-switch"></span>
                                     <span>Hiển thị log ra console</span>
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Guide Section -->
+                <section id="guide" class="config-section">
+                    <div class="card guide-card">
+                        <div class="card-header">
+                            <h3>📖 Hướng Dẫn Sử Dụng (Dành Cho Người Mới)</h3>
+                            <p>Bí kíp sử dụng Moltbot từ A-Z</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="manual-content" style="line-height: 1.6;">
+                                <h4 class="text-primary mt-3">1. Bắt Đầu Nhanh</h4>
+                                <ol>
+                                    <li><strong>Chọn Model AI:</strong> Vào mục "Model AI", chọn <em>"✨ Google
+                                            Antigravity"</em> (xịn nhất) hoặc <em>"🌙 Moonshot"</em> (tiết kiệm). Nhấn
+                                        "Lưu Cấu Hình".</li>
+                                    <li><strong>Chạy Bot:</strong> Nhấn nút <strong>▷ Chạy Bot</strong> ở góc trên cùng
+                                        bên phải.</li>
+                                    <li><strong>Nhận diện thành công:</strong> Nhìn vào khung đen (Console) bên dưới,
+                                        thấy dòng chữ xanh lá <code>✅ Moltbot đã khởi động!</code> là xong.</li>
+                                </ol>
+
+                                <h4 class="text-primary mt-3">2. Bot Làm Được Gì?</h4>
+                                <p>Bạn có thể ra lệnh bằng tiếng Việt tự nhiên qua Telegram:</p>
+                                <ul>
+                                    <li>🔎 <strong>Tra cứu:</strong> "Tìm giá cuốn sách 'Đắc Nhân Tâm' trên Tiki và
+                                        Fahasa."</li>
+                                    <li>📝 <strong>Viết lách:</strong> "Viết email xin nghỉ phép gửi sếp.", "Tóm tắt
+                                        link báo này..."</li>
+                                    <li>💡 <strong>Sáng tạo:</strong> "Lên ý tưởng kịch bản video TikTok về du lịch."
+                                    </li>
+                                </ul>
+
+                                <h4 class="text-warning mt-3">3. Xử Lý Lỗi Thường Gặp</h4>
+                                <ul>
+                                    <li><code>Web Fetch failed (404)</code>: Link web bị hỏng hoặc bài viết đã bị xóa
+                                        (Lỗi của web đích, không phải do Bot).</li>
+                                    <li><code>401 Invalid Authentication</code>: Chưa đăng nhập. Hãy bấm nút "Login
+                                        Google" hoặc kiểm tra API Key.</li>
+                                    <li><strong>Bot không phản hồi:</strong> Nhấn nút <strong>🚑 Doctor</strong> trên
+                                        thanh công cụ để Bot tự sửa lỗi.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -1009,53 +1305,12 @@ Nếu không tìm thấy sản phẩm, thông báo lỗi.</pre>
                                             </li>
                                             <li>Thêm vào file <code>.env</code>: GOOGLE_API_KEY_1, GOOGLE_API_KEY_2, ...
                                             </li>
-                                            <li>Chạy proxy: <code>npm run proxy</code></li>
-                                            <li>Chọn model Gemma 3 trong cấu hình</li>
                                         </ol>
                                     </div>
                                 </div>
-                                <div class="faq-item">
-                                    <div class="faq-question">Bot có thể làm những gì?</div>
-                                    <div class="faq-answer">
-                                        <ul>
-                                            <li>🌐 Lướt web, tìm kiếm, thu thập dữ liệu</li>
-                                            <li>📊 So sánh giá, theo dõi sản phẩm</li>
-                                            <li>📰 Tổng hợp tin tức, tóm tắt nội dung</li>
-                                            <li>💬 Trả lời tin nhắn Telegram tự động</li>
-                                            <li>📁 Đọc/ghi file, tạo báo cáo</li>
-                                            <li>⏰ Chạy tác vụ theo lịch</li>
-                                            <li>🖥️ Thực thi lệnh hệ thống (nếu được phép)</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Terminal Commands -->
-                    <div class="card guide-card">
-                        <div class="card-header">
-                            <h3>🖥️ Lệnh Terminal</h3>
-                            <p>Các lệnh để chạy Moltbot</p>
-                        </div>
-                        <div class="card-body">
-                            <div class="terminal-commands">
-                                <div class="terminal-cmd">
-                                    <div class="cmd-title">Chạy Config Server (giao diện này)</div>
-                                    <code>npm run config</code>
-                                </div>
-                                <div class="terminal-cmd">
-                                    <div class="cmd-title">Chạy Google Proxy (nếu dùng Gemma)</div>
-                                    <code>npm run proxy</code>
-                                </div>
-                                <div class="terminal-cmd">
-                                    <div class="cmd-title">Chạy OpenClaw Bot</div>
-                                    <code>openclaw --config openclaw.json</code>
-                                </div>
-                                <div class="terminal-cmd">
-                                    <div class="cmd-title">Cài đặt dependencies</div>
-                                    <code>npm install</code>
-                                </div>
+                                tự sửa lỗi.
+                                </li>
+                                </ul>
                             </div>
                         </div>
                     </div>

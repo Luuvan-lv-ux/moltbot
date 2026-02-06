@@ -120,6 +120,11 @@
             border-bottom: none;
         }
 
+        .toggle-info {
+            flex: 1;
+            margin-right: 16px;
+        }
+
         .toggle-info h4 {
             font-size: 15px;
             font-weight: 500;
@@ -131,14 +136,18 @@
             margin-top: 2px;
         }
 
+        /* Toggle Switch - Green/Red States */
         .toggle-switch {
-            width: 52px;
+            width: 56px;
+            min-width: 56px;
             height: 32px;
-            background: #444;
+            background: #ef4444;
+            /* RED when inactive */
             border-radius: 16px;
             position: relative;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: background 0.3s ease;
+            flex-shrink: 0;
         }
 
         .toggle-switch::after {
@@ -150,15 +159,17 @@
             border-radius: 50%;
             top: 3px;
             left: 3px;
-            transition: transform 0.2s;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .toggle-switch.active {
-            background: var(--tg-theme-button-color);
+            background: #22c55e;
+            /* GREEN when active */
         }
 
         .toggle-switch.active::after {
-            transform: translateX(20px);
+            transform: translateX(24px);
         }
 
         .btn {
@@ -287,13 +298,20 @@
                 <div class="form-group">
                     <label>Model chính</label>
                     <select id="primaryModel" class="form-control">
-                        <optgroup label="Moonshot (Kimi)">
+                        <optgroup label="✨ Google Antigravity">
+                            <option value="google-antigravity/gemini-3-pro-high">Gemini 3 Pro (High)</option>
+                            <option value="google-antigravity/gemini-3-pro-low">Gemini 3 Pro (Low)</option>
+                            <option value="google-antigravity/gemini-3-flash">Gemini 3 Flash</option>
+                            <option value="google-antigravity/claude-sonnet-4.5">Claude Sonnet 4.5</option>
+                            <option value="google-antigravity/claude-sonnet-4.5-thinking">Claude Sonnet 4.5 (Thinking)
+                            </option>
+                            <option value="google-antigravity/claude-opus-4.5-thinking">Claude Opus 4.5 (Thinking)
+                            </option>
+                        </optgroup>
+                        <optgroup label="🌙 Moonshot (Kimi)">
                             <option value="moonshot/kimi-k2.5">Kimi K2.5 (Mới nhất)</option>
                             <option value="moonshot/kimi-k2-turbo-preview">Kimi K2 Turbo</option>
                             <option value="moonshot/kimi-k2-thinking">Kimi K2 Thinking</option>
-                        </optgroup>
-                        <optgroup label="Google">
-                            <option value="google/models/gemma-3-27b-it">Gemma 3 27B</option>
                         </optgroup>
                     </select>
                 </div>
@@ -499,7 +517,7 @@
             currentConfig.security.allowFileAccess = getToggle('toggleFile');
 
             try {
-                const res = await fetch('/api/config', {
+                const res = await fetch('/api/bot/config', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(currentConfig)

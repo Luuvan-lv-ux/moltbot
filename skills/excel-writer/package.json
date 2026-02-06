@@ -1,0 +1,9 @@
+{
+    "name": "excel-writer",
+    "version": "1.0.0",
+    "description": "Skill to write data to Excel files",
+    "main": "index.js",
+    "dependencies": {
+        "xlsx": "^0.18.5"
+    }
+}

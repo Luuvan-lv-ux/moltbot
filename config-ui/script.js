@@ -1,4 +1,232 @@
-// Moltbot Config UI - Enhanced Script with Bot Control & Script Editor
+// ==== MOLTBOT CONFIG UI v2.1 - Model Auto-Save ====
+console.log('%c🤖 Moltbot Config UI v2.1 loaded', 'color: #00ff00; font-weight: bold');
+const API_BASE = window.location.origin;
+
+// ==================== CONSOLE LOGGING ====================
+function logToConsole(type, message) {
+    const consoleEl = document.querySelector('.console-content');
+    if (!consoleEl) return;
+
+    const now = new Date();
+    const time = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    const logEntry = document.createElement('div');
+    logEntry.className = `console-entry console-${type}`;
+    logEntry.innerHTML = `<span class="timestamp">${time}</span> <span class="log-message">${message}</span>`;
+
+    consoleEl.appendChild(logEntry);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+}
+
+
+// Global Preset Selectors
+function selectBotPreset(value) {
+    if (value) {
+        document.getElementById('telegramToken').value = value;
+    }
+}
+
+function selectApiKeyPreset(value) {
+    if (value) {
+        document.getElementById('moonshotApiKey').value = value;
+    }
+}
+
+// ==================== BOT CONTROL FUNCTIONS ====================
+async function saveAndSyncConfig() {
+    const config = buildConfig();
+    console.log('[DEBUG] Saving config with model:', config.agents?.defaults?.model?.primary);
+    try {
+        const res = await fetch(`${API_BASE}/api/bot/config`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(config)
+        });
+        const data = await res.json();
+        console.log('[DEBUG] Server response:', data);
+        if (data.success) {
+            showToast('💾', 'Đã lưu và đồng bộ cấu hình!');
+            logToConsole('success', '💾 Cấu hình đã được lưu và đồng bộ sang OpenClaw!');
+            // Update stat card
+            const model = config.agents?.defaults?.model?.primary || 'moonshot/kimi-k2.5';
+            document.getElementById('statModel').textContent = model.split('/').pop();
+        } else {
+            showToast('❌', 'Lỗi lưu: ' + data.error);
+        }
+    } catch (e) {
+        console.error('[DEBUG] Error saving config:', e);
+        showToast('❌', 'Không thể kết nối server');
+    }
+}
+
+async function startBot() {
+    // CRITICAL: Auto-save config before starting to ensure model selection is applied
+    logToConsole('info', '💾 Đang lưu cấu hình...');
+    await saveAndSyncConfig();
+
+    logToConsole('info', '🚀 Đang khởi động OpenClaw Gateway...');
+    try {
+        const res = await fetch(`${API_BASE}/api/bot/start`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+            logToConsole('success', '✅ Moltbot (OpenClaw) đã khởi động!');
+        } else {
+            logToConsole('error', '❌ Lỗi khởi động: ' + data.error);
+        }
+    } catch (e) {
+        logToConsole('error', '❌ Không thể kết nối server');
+    }
+}
+
+async function stopBot() {
+    try {
+        logToConsole('warning', 'Đang dừng bot...');
+        const res = await fetch(`${API_BASE}/api/bot/stop`, { method: 'POST' });
+        const data = await res.json();
+        if (data.success) {
+            logToConsole('success', '⏹️ Bot đã dừng.');
+        } else {
+            logToConsole('error', '❌ Lỗi dừng bot: ' + data.error);
+        }
+    } catch (e) {
+        logToConsole('error', '❌ Không thể kết nối server');
+    }
+}
+
+// Auth Functions
+async function checkAuthStatus() {
+    try {
+        const res = await fetch(`${API_BASE}/api/auth/status`);
+        const data = await res.json();
+
+        const loggedOutDiv = document.getElementById('authLoggedOut');
+        const loggedInDiv = document.getElementById('authLoggedIn');
+
+        if (data.loggedIn) {
+            loggedOutDiv.style.display = 'none';
+            loggedInDiv.style.display = 'block';
+
+            document.getElementById('authName').textContent = data.account.name;
+            document.getElementById('authEmail').textContent = data.account.email;
+            document.getElementById('authAvatar').src = data.account.avatar;
+        } else {
+            loggedOutDiv.style.display = 'block';
+            loggedInDiv.style.display = 'none';
+        }
+    } catch (e) {
+        console.error('Auth check error:', e);
+    }
+}
+
+async function handleGoogleLogin() {
+    try {
+        const btn = document.getElementById('googleLoginBtn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span>⏳ Đang mở cửa sổ...</span>';
+        btn.disabled = true;
+
+        // Trigger login
+        fetch(`${API_BASE}/api/auth/login`, { method: 'POST' }).catch(e => console.error(e));
+
+        showToast('🔐', 'Đang mở trình duyệt để đăng nhập...');
+
+        // Poll for success
+        let attempts = 0;
+        const checkInterval = setInterval(async () => {
+            attempts++;
+            const statusRes = await fetch(`${API_BASE}/api/auth/status`);
+            const statusData = await statusRes.json();
+
+            if (statusData.loggedIn) {
+                clearInterval(checkInterval);
+                checkAuthStatus();
+                showToast('✅', 'Đăng nhập thành công!');
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+
+            // Stop polling after 60s
+            if (attempts > 30) {
+                clearInterval(checkInterval);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                showToast('⚠️', 'Hết thời gian chờ đăng nhập. Hãy thử lại.');
+            }
+        }, 2000);
+
+    } catch (e) {
+        showToast('❌', 'Lỗi kết nối server');
+        const btn = document.getElementById('googleLoginBtn');
+        if (btn) btn.disabled = false;
+    }
+}
+
+function toggleAuthMenu() {
+    document.getElementById('authDropdown').classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+window.addEventListener('click', (e) => {
+    if (!e.target.closest('.auth-account')) {
+        const dropdown = document.getElementById('authDropdown');
+        if (dropdown && dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+});
+
+async function handleLogout() {
+    try {
+        await fetch(`${API_BASE}/api/auth/logout`, { method: 'POST' });
+        checkAuthStatus();
+        showToast('👋', 'Đã đăng xuất');
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function runCliCommand(command, args = []) {
+    logToConsole('info', `🚀 Đang chạy: openclaw ${command} ${args.join(' ')}...`);
+
+    try {
+        const res = await fetch(`${API_BASE}/api/cli/run`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ command, args })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            logToConsole('success', '✅ Lệnh thành công!');
+
+            // Special handling for output display
+            if (data.output) {
+                data.output.split('\n').forEach(line => {
+                    if (line.trim()) logToConsole('info', `> ${line}`);
+                });
+            }
+
+            // Refresh logs if running status check
+            if (command === 'doctor') {
+                showToast('✅', 'Đã kiểm tra hệ thống xong');
+            }
+        } else {
+            logToConsole('error', `❌ Lỗi: Mã thoát ${data.code}`);
+            if (data.output) {
+                data.output.split('\n').forEach(line => {
+                    if (line.trim()) logToConsole('error', `> ${line}`);
+                });
+            }
+        }
+    } catch (e) {
+        logToConsole('error', `❌ Lỗi kết nối: ${e.message}`);
+    }
+}
+
+function switchAccount() {
+    handleGoogleLogin();
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // ==================== STATE ====================
@@ -148,9 +376,27 @@ Bỏ qua các trang lỗi và ghi log.`
     startBotBtn?.addEventListener('click', () => startBot());
     stopBotBtn?.addEventListener('click', () => stopBot());
 
+    async function handleGoogleLogin() {
+        if (!confirm('Bạn có chắc muốn thêm tài khoản mới? Một cửa sổ đăng nhập Google sẽ hiện ra.')) return;
+
+        addLog('info', '🚀 Đang mở trình duyệt để đăng nhập Google...');
+        try {
+            const res = await fetch('/api/google/login', { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                addLog('success', '✅ Đã kích hoạt quy trình đăng nhập. Hãy kiểm tra trình duyệt!');
+                alert('Vui lòng kiểm tra cửa sổ trình duyệt vừa bật lên để đăng nhập.');
+            } else {
+                addLog('error', '❌ Lỗi: ' + data.message);
+            }
+        } catch (e) {
+            addLog('error', '❌ Lỗi kết nối: ' + e.message);
+        }
+    }
+
     async function startBot() {
         updateBotStatus('loading', 'Đang khởi động...');
-        logToConsole('info', 'Đang khởi động Moltbot...');
+        logToConsole('info', 'Đang khởi động OpenClaw Gateway...');
 
         try {
             const response = await fetch('/api/bot/start', { method: 'POST' });
@@ -162,39 +408,26 @@ Bỏ qua các trang lỗi và ghi log.`
                 updateBotStatus('online', 'Đang Chạy');
                 startBotBtn.style.display = 'none';
                 stopBotBtn.style.display = 'flex';
-                logToConsole('success', '✅ Moltbot đã khởi động thành công!');
-                logToConsole('info', `Model: ${document.getElementById('primaryModel')?.value || 'Kimi K2.5'}`);
+                logToConsole('success', '✅ Moltbot (OpenClaw) đã khởi động!');
+                startLogPolling();
                 startUptimeCounter();
             } else {
-                throw new Error(data.error || 'Không thể khởi động');
+                updateBotStatus('offline', 'Lỗi Khởi Động');
+                logToConsole('error', 'Lỗi: ' + data.error);
+                botRunning = false;
             }
         } catch (error) {
-            // For demo, simulate success
-            botRunning = true;
-            botStartTime = new Date();
-            updateBotStatus('online', 'Đang Chạy');
-            startBotBtn.style.display = 'none';
-            stopBotBtn.style.display = 'flex';
-            logToConsole('success', '✅ Moltbot đã khởi động thành công!');
-            logToConsole('info', `Model: ${document.getElementById('primaryModel')?.value || 'moonshot/kimi-k2.5'}`);
-            logToConsole('info', 'Telegram: Đang kết nối...');
-            setTimeout(() => {
-                logToConsole('success', 'Telegram: ✅ Đã kết nối');
-                logToConsole('info', '🎧 Bot đang lắng nghe tin nhắn...');
-            }, 1500);
-            startUptimeCounter();
+            updateBotStatus('offline', 'Lỗi Server');
+            logToConsole('error', 'Lỗi kết nối: ' + error.message);
+            botRunning = false;
         }
     }
 
     async function stopBot() {
         updateBotStatus('loading', 'Đang dừng...');
-        logToConsole('warning', 'Đang dừng Moltbot...');
-
         try {
             await fetch('/api/bot/stop', { method: 'POST' });
-        } catch (error) {
-            // Ignore
-        }
+        } catch (error) { }
 
         setTimeout(() => {
             botRunning = false;
@@ -202,9 +435,9 @@ Bỏ qua các trang lỗi và ghi log.`
             updateBotStatus('offline', 'Đang Tắt');
             startBotBtn.style.display = 'flex';
             stopBotBtn.style.display = 'none';
-            logToConsole('info', '⏹️ Moltbot đã dừng.');
+            logToConsole('info', '⏹️ Bot đã dừng.');
             stopUptimeCounter();
-            document.getElementById('statUptime').textContent = '--:--:--';
+            stopLogPolling();
         }, 1000);
     }
 
@@ -583,12 +816,32 @@ Bỏ qua các trang lỗi và ghi log.`
                     baseUrl: document.getElementById('moonshotBaseUrl')?.value || 'https://api.moonshot.cn/v1',
                     apiKey: '${MOONSHOT_API_KEY}',
                     api: 'openai'
+                },
+                "google-antigravity": {
+                    baseUrl: document.getElementById('googleProxyUrl')?.value || "https://generativelanguage.googleapis.com/v1beta",
+                    api: "google",
+                    models: [
+                        { id: "gemini-3-pro-high", name: "Gemini 3 Pro (High)", contextWindow: 2000000, maxTokens: 8192 },
+                        { id: "gemini-3-pro-low", name: "Gemini 3 Pro (Low)", contextWindow: 2000000, maxTokens: 8192 },
+                        { id: "gemini-3-flash", name: "Gemini 3 Flash", contextWindow: 1000000, maxTokens: 8192 },
+                        { id: "claude-sonnet-4.5", name: "Claude Sonnet 4.5", contextWindow: 200000, maxTokens: 8192 },
+                        { id: "claude-sonnet-4.5-thinking", name: "Claude Sonnet 4.5 (Thinking)", contextWindow: 200000, maxTokens: 8192 },
+                        { id: "claude-opus-4.5-thinking", name: "Claude Opus 4.5 (Thinking)", contextWindow: 200000, maxTokens: 8192 }
+                    ]
                 }
             },
             agents: {
+                systemPrompt: document.getElementById('systemPrompt')?.value || '',
                 defaults: {
+                    description: document.getElementById('systemPrompt')?.value || '',
                     model: {
                         primary: document.getElementById('primaryModel')?.value || 'moonshot/kimi-k2.5'
+                    },
+                    models: {
+                        [document.getElementById('primaryModel')?.value || 'moonshot/kimi-k2.5']: {},
+                        "moonshot/kimi-k2.5": {},
+                        "google-antigravity/gemini-3-flash": {},
+                        "google-antigravity/claude-sonnet-4.5": {}
                     },
                     maxConcurrent: parseInt(document.getElementById('maxConcurrent')?.value) || 4,
                     subagentsConcurrent: parseInt(document.getElementById('subagentsConcurrent')?.value) || 8,
@@ -620,7 +873,19 @@ Bỏ qua các trang lỗi và ghi log.`
             security: {
                 maxRequestsPerMinute: parseInt(document.getElementById('maxRequests')?.value) || 60,
                 allowShellCommands: document.getElementById('allowShellCommands')?.checked ?? true,
-                allowFileAccess: document.getElementById('allowFileAccess')?.checked ?? true
+                allowFileAccess: document.getElementById('allowFileAccess')?.checked ?? true,
+                allowEmail: document.getElementById('allowEmail')?.checked ?? false,
+                allowInternet: document.getElementById('allowInternet')?.checked ?? true,
+                allowScreenCapture: document.getElementById('allowScreenCapture')?.checked ?? true,
+                allowCamera: document.getElementById('allowCamera')?.checked ?? false,
+                allowMicrophone: document.getElementById('allowMicrophone')?.checked ?? false,
+                allowAudioOutput: document.getElementById('allowAudioOutput')?.checked ?? true,
+                allowClipboard: document.getElementById('allowClipboard')?.checked ?? true,
+                allowNotifications: document.getElementById('allowNotifications')?.checked ?? true,
+                allowLocation: document.getElementById('allowLocation')?.checked ?? false,
+                allowPayments: document.getElementById('allowPayments')?.checked ?? false,
+                allowBluetooth: document.getElementById('allowBluetooth')?.checked ?? false,
+                allowUSB: document.getElementById('allowUSB')?.checked ?? false
             },
             logging: {
                 level: document.getElementById('logLevel')?.value || 'info',
@@ -646,13 +911,21 @@ Bỏ qua các trang lỗi và ghi log.`
         }
 
         // Agents
-        if (config.agents?.defaults) {
-            if (document.getElementById('maxConcurrent')) document.getElementById('maxConcurrent').value = config.agents.defaults.maxConcurrent || 4;
-            if (document.getElementById('subagentsConcurrent')) document.getElementById('subagentsConcurrent').value = config.agents.defaults.subagentsConcurrent || 8;
-            if (document.getElementById('memoryEnabled')) document.getElementById('memoryEnabled').checked = config.agents.defaults.memory?.enabled ?? true;
-            if (document.getElementById('memoryMaxTokens')) document.getElementById('memoryMaxTokens').value = config.agents.defaults.memory?.maxTokens || 100000;
-            if (document.getElementById('reasoningEnabled')) document.getElementById('reasoningEnabled').checked = config.agents.defaults.reasoning?.enabled ?? true;
-            if (document.getElementById('reasoningDepth')) document.getElementById('reasoningDepth').value = config.agents.defaults.reasoning?.depth || 'deep';
+        if (config.agents) {
+            if (document.getElementById('systemPrompt')) document.getElementById('systemPrompt').value = config.agents.systemPrompt || '';
+
+            if (config.agents.defaults) {
+                if (document.getElementById('maxConcurrent')) document.getElementById('maxConcurrent').value = config.agents.defaults.maxConcurrent || 4;
+                if (document.getElementById('subagentsConcurrent')) document.getElementById('subagentsConcurrent').value = config.agents.defaults.subagentsConcurrent || 8;
+                if (document.getElementById('memoryEnabled')) document.getElementById('memoryEnabled').checked = config.agents.defaults.memory?.enabled ?? true;
+                if (document.getElementById('memoryMaxTokens')) {
+                    const val = config.agents.defaults.memory?.maxTokens || 100000;
+                    document.getElementById('memoryMaxTokens').value = val;
+                    document.getElementById('memoryValueLabel').textContent = (val / 1000) + 'k tokens';
+                }
+                if (document.getElementById('reasoningEnabled')) document.getElementById('reasoningEnabled').checked = config.agents.defaults.reasoning?.enabled ?? true;
+                if (document.getElementById('reasoningDepth')) document.getElementById('reasoningDepth').value = config.agents.defaults.reasoning?.depth || 'deep';
+            }
         }
 
         // Plugins
@@ -668,6 +941,7 @@ Bỏ qua các trang lỗi và ghi log.`
             if (document.getElementById('maxRequests')) document.getElementById('maxRequests').value = config.security.maxRequestsPerMinute || 60;
             if (document.getElementById('allowShellCommands')) document.getElementById('allowShellCommands').checked = config.security.allowShellCommands ?? true;
             if (document.getElementById('allowFileAccess')) document.getElementById('allowFileAccess').checked = config.security.allowFileAccess ?? true;
+            if (document.getElementById('allowEmail')) document.getElementById('allowEmail').checked = config.security.allowEmail ?? false;
         }
 
         // Logging
@@ -682,6 +956,33 @@ Bỏ qua các trang lỗi và ghi log.`
             scripts = config.scripts;
             renderScriptsList();
         }
+    }
+
+    // ==================== LOGGING ====================
+    let logPollInterval = null;
+    let lastLogTime = 0;
+
+    function startLogPolling() {
+        if (logPollInterval) clearInterval(logPollInterval);
+        logPollInterval = setInterval(fetchLogs, 1000);
+    }
+
+    function stopLogPolling() {
+        if (logPollInterval) clearInterval(logPollInterval);
+        logPollInterval = null;
+    }
+
+    async function fetchLogs() {
+        try {
+            const res = await fetch(`/api/logs?after=${lastLogTime}`);
+            const data = await res.json();
+            if (data.success && data.logs && data.logs.length > 0) {
+                data.logs.forEach(log => {
+                    logToConsole(log.type, log.message);
+                    lastLogTime = Math.max(lastLogTime, log.timestamp);
+                });
+            }
+        } catch (e) { }
     }
 
     // ==================== TOAST ====================
@@ -701,19 +1002,59 @@ Bỏ qua các trang lỗi và ghi log.`
         try {
             const response = await fetch('/api/config');
             const data = await response.json();
-            if (data.success && data.config) {
-                currentConfig = data.config;
-                applyConfig(data.config);
+            // API returns raw config object, not {success, config} wrapper
+            if (data && data.agents) {
+                currentConfig = data;
+                applyConfig(data);
                 logToConsole('success', '✅ Đã tải cấu hình thành công');
+
+                // Update model stat card
+                if (data.agents?.defaults?.model?.primary) {
+                    const model = data.agents.defaults.model.primary;
+                    document.getElementById('statModel').textContent = model.split('/').pop();
+                }
+            } else if (data.error) {
+                logToConsole('warning', `⚠️ ${data.error}`);
             }
         } catch (error) {
             logToConsole('info', 'ℹ️ Chạy locally - config sẽ được lưu vào file');
+            document.getElementById('statModel').textContent = 'Chưa kết nối';
         }
-
-        // Update model stat
-        const model = document.getElementById('primaryModel')?.value || 'moonshot/kimi-k2.5';
-        document.getElementById('statModel').textContent = model.split('/').pop() || 'Kimi K2.5';
     }
 
-    init();
+    let lastBotStatus = null; // Track previous status to avoid log spam
+    async function checkBotStatus() {
+        try {
+            const res = await fetch('/api/status');
+            const data = await res.json();
+            const isRunning = data.success && data.status.botRunning;
+
+            if (isRunning) {
+                document.getElementById('startBotBtn').disabled = true;
+                document.getElementById('startBotBtn').innerHTML = '✅ Đang chạy';
+                document.getElementById('stopBotBtn').disabled = false;
+                // Only log on status change to avoid spam
+                if (lastBotStatus !== true) {
+                    logToConsole('info', 'ℹ️ Bot đang chạy');
+                }
+            } else {
+                document.getElementById('startBotBtn').disabled = false;
+                document.getElementById('startBotBtn').innerHTML = '🚀 Chạy Bot';
+                document.getElementById('stopBotBtn').disabled = false;
+                if (lastBotStatus !== false && lastBotStatus !== null) {
+                    logToConsole('info', 'ℹ️ Bot đã dừng');
+                }
+            }
+            lastBotStatus = isRunning;
+        } catch (e) {
+            console.error('Status check error:', e);
+        }
+    }
+
+    // Check status periodically
+    setInterval(checkBotStatus, 5000);
+
+    // Initial check
+    checkAuthStatus();
+    init().then(() => checkBotStatus());
 });

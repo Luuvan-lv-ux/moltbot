@@ -1,7 +1,9 @@
 # Dependencies
 node_modules/
+package-lock.json
+yarn.lock
 
-# Environment files (chứa API keys - KHÔNG ĐƯỢC UPLOAD)
+# Environment variables
 .env
 .env.local
 .env.*.local
@@ -10,19 +12,36 @@ node_modules/
 logs/
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+tmp/
+
+# Config files with sensitive data
+config.json
+
+# OpenClaw data
+.openclaw/
+
+# Workspace data
+workspace/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
 
-# OS
-.DS_Store
-Thumbs.db
-
-# Build output
-dist/
-build/
-
-# Temporary files
-*.tmp
-*.temp
+# Browser profiles (may contain sensitive data)
+browser-profiles/
