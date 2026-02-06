@@ -59,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
         plugins: { title: 'Plugins', desc: 'Bật/tắt các plugin mở rộng' },
         skills: { title: 'Skills', desc: 'Quản lý các skill của bot' },
         security: { title: 'Bảo mật', desc: 'Cấu hình an toàn và giới hạn' },
-        logging: { title: 'Logging', desc: 'Cấu hình ghi log' }
+        logging: { title: 'Logging', desc: 'Cấu hình ghi log' },
+        guide: { title: 'Hướng Dẫn Sử Dụng', desc: 'Tài liệu hướng dẫn chi tiết cách dùng Moltbot' }
     };
 
     // ==================== EXAMPLE SCRIPTS ====================

@@ -72,6 +72,11 @@
                     <span class="nav-icon">📋</span>
                     <span>Logging</span>
                 </a>
+                <div class="nav-divider"></div>
+                <a href="#guide" class="nav-item" data-section="guide">
+                    <span class="nav-icon">📖</span>
+                    <span>Hướng dẫn</span>
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <button class="btn btn-primary btn-export" id="exportBtn">
@@ -680,6 +685,377 @@ Bot sẽ tự động hiểu và thực hiện từng bước!"></textarea>
                                     <span class="toggle-switch"></span>
                                     <span>Hiển thị log ra console</span>
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Guide Section -->
+                <section id="guide" class="config-section">
+                    <!-- Getting Started -->
+                    <div class="card guide-card">
+                        <div class="card-header">
+                            <h3>🚀 Bắt Đầu Nhanh</h3>
+                            <p>Hướng dẫn sử dụng Moltbot từ A đến Z</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="guide-steps">
+                                <div class="guide-step">
+                                    <div class="step-number">1</div>
+                                    <div class="step-content">
+                                        <h4>Cấu hình API Key</h4>
+                                        <p>Vào tab <strong>🧠 Model AI</strong> và nhập API Key của Moonshot (Kimi) hoặc
+                                            Google.</p>
+                                        <div class="step-tip">💡 Lấy API Key tại <a href="https://platform.moonshot.ai"
+                                                target="_blank">platform.moonshot.ai</a></div>
+                                    </div>
+                                </div>
+                                <div class="guide-step">
+                                    <div class="step-number">2</div>
+                                    <div class="step-content">
+                                        <h4>Kết nối Telegram (tùy chọn)</h4>
+                                        <p>Vào tab <strong>📱 Telegram</strong>, nhập Bot Token từ @BotFather để điều
+                                            khiển bot qua Telegram.</p>
+                                    </div>
+                                </div>
+                                <div class="guide-step">
+                                    <div class="step-number">3</div>
+                                    <div class="step-content">
+                                        <h4>Chạy Bot</h4>
+                                        <p>Nhấn nút <strong>▶️ Chạy Bot</strong> ở góc phải trên để khởi động. Xem log
+                                            trong Console.</p>
+                                    </div>
+                                </div>
+                                <div class="guide-step">
+                                    <div class="step-number">4</div>
+                                    <div class="step-content">
+                                        <h4>Gửi lệnh hoặc tạo kịch bản</h4>
+                                        <p>Dùng <strong>Tác vụ nhanh</strong> để gửi lệnh, hoặc vào tab <strong>📜 Kịch
+                                                bản</strong> để tạo kịch bản tự động.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Script Guide -->
+                    <div class="card guide-card">
+                        <div class="card-header">
+                            <h3>📜 Cách Viết Kịch Bản</h3>
+                            <p>Hướng dẫn chi tiết cách viết kịch bản cho bot</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="guide-section">
+                                <h4>📝 Nguyên tắc cơ bản</h4>
+                                <ul class="guide-list">
+                                    <li>Viết bằng <strong>tiếng Việt tự nhiên</strong>, bot sẽ tự hiểu</li>
+                                    <li>Mỗi bước viết trên <strong>1 dòng riêng</strong>, đánh số thứ tự</li>
+                                    <li>Mô tả <strong>rõ ràng, cụ thể</strong> muốn làm gì</li>
+                                    <li>Nên có bước <strong>xử lý lỗi</strong> ("Nếu không tìm thấy thì...")</li>
+                                </ul>
+                            </div>
+
+                            <div class="guide-section">
+                                <h4>🎯 Cấu trúc kịch bản tốt</h4>
+                                <div class="code-example">
+                                    <pre>1. [Hành động đầu tiên]
+2. [Hành động tiếp theo]
+3. [Xử lý kết quả]
+4. [Thông báo hoặc lưu trữ]
+
+Nếu có lỗi: [Cách xử lý]</pre>
+                                </div>
+                            </div>
+
+                            <div class="guide-section">
+                                <h4>✨ Ví dụ kịch bản</h4>
+
+                                <div class="example-block">
+                                    <div class="example-title">📊 So sánh giá sản phẩm</div>
+                                    <div class="code-example">
+                                        <pre>1. Mở trình duyệt và vào trang tiki.vn
+2. Tìm kiếm sản phẩm "iPhone 15 Pro Max"
+3. Lấy giá của 3 sản phẩm đầu tiên
+4. Mở trang shopee.vn và tìm kiếm cùng sản phẩm
+5. Lấy giá của 3 sản phẩm đầu tiên
+6. So sánh giá giữa hai trang
+7. Gửi báo cáo qua Telegram với format:
+   📱 SO SÁNH GIÁ: iPhone 15 Pro Max
+   ━━━━━━━━━━━━━━━━━━━━━
+   🔸 Tiki: [giá thấp nhất]
+   🔸 Shopee: [giá thấp nhất]
+   💡 Nên mua tại: [trang rẻ hơn]
+
+Nếu không tìm thấy sản phẩm, thông báo lỗi.</pre>
+                                    </div>
+                                </div>
+
+                                <div class="example-block">
+                                    <div class="example-title">📰 Tổng hợp tin tức</div>
+                                    <div class="code-example">
+                                        <pre>1. Mở trang vnexpress.net
+2. Lấy 5 tiêu đề tin tức mới nhất ở mục Thời sự
+3. Tóm tắt mỗi tin trong 2 câu
+4. Định dạng thành bản tin:
+   📰 BẢN TIN SÁNG [ngày hôm nay]
+   ━━━━━━━━━━━━━━━━━━━━━
+   1. [Tiêu đề]
+      ➜ [Tóm tắt]
+   ...
+5. Gửi qua Telegram lúc 8h sáng mỗi ngày</pre>
+                                    </div>
+                                </div>
+
+                                <div class="example-block">
+                                    <div class="example-title">💬 Trả lời tự động Telegram</div>
+                                    <div class="code-example">
+                                        <pre>Khi nhận tin nhắn chứa "/giasach":
+1. Lấy tên sách từ tin nhắn (sau từ /giasach)
+2. Tìm kiếm sách trên Tiki
+3. Tìm kiếm sách trên Fahasa
+4. So sánh giá và tìm giá rẻ nhất
+5. Trả lời tin nhắn với kết quả:
+   📚 [Tên sách]
+   🔸 Tiki: [giá] - [link]
+   🔸 Fahasa: [giá] - [link]
+   ✅ Rẻ nhất: [trang] chỉ [giá]</pre>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="guide-section">
+                                <h4>⏰ Các loại Trigger (Kích hoạt)</h4>
+                                <div class="trigger-grid">
+                                    <div class="trigger-item">
+                                        <div class="trigger-icon">🖱️</div>
+                                        <div class="trigger-info">
+                                            <strong>Thủ công</strong>
+                                            <p>Chạy khi bạn nhấn nút</p>
+                                        </div>
+                                    </div>
+                                    <div class="trigger-item">
+                                        <div class="trigger-icon">🚀</div>
+                                        <div class="trigger-info">
+                                            <strong>Khi khởi động</strong>
+                                            <p>Chạy ngay khi bot bắt đầu</p>
+                                        </div>
+                                    </div>
+                                    <div class="trigger-item">
+                                        <div class="trigger-icon">⏰</div>
+                                        <div class="trigger-info">
+                                            <strong>Theo lịch (Cron)</strong>
+                                            <p>Chạy theo thời gian định sẵn</p>
+                                            <code>0 8 * * *</code> = 8h sáng mỗi ngày
+                                        </div>
+                                    </div>
+                                    <div class="trigger-item">
+                                        <div class="trigger-icon">💬</div>
+                                        <div class="trigger-info">
+                                            <strong>Khi nhận tin nhắn</strong>
+                                            <p>Chạy khi có tin nhắn Telegram chứa từ khóa</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Model Guide -->
+                    <div class="card guide-card">
+                        <div class="card-header">
+                            <h3>🧠 Về các Model AI</h3>
+                            <p>Hiểu về các model để chọn phù hợp</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="model-comparison">
+                                <div class="model-item">
+                                    <div class="model-badge moonshot">🌙 Moonshot</div>
+                                    <h4>Kimi K2.5</h4>
+                                    <div class="model-specs">
+                                        <span>📏 256K context</span>
+                                        <span>🖼️ Multimodal</span>
+                                        <span>⚡ Mới nhất</span>
+                                    </div>
+                                    <p>Model mạnh nhất, hỗ trợ hình ảnh, context dài. <strong>Khuyên dùng</strong> cho
+                                        hầu hết tác vụ.</p>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-badge moonshot">🌙 Moonshot</div>
+                                    <h4>Kimi K2 Turbo</h4>
+                                    <div class="model-specs">
+                                        <span>📏 256K context</span>
+                                        <span>🚀 Rất nhanh</span>
+                                    </div>
+                                    <p>Nhanh hơn K2.5, phù hợp tác vụ đơn giản cần tốc độ.</p>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-badge moonshot">🌙 Moonshot</div>
+                                    <h4>Kimi K2 Thinking</h4>
+                                    <div class="model-specs">
+                                        <span>📏 256K context</span>
+                                        <span>🧠 Suy luận sâu</span>
+                                    </div>
+                                    <p>Dành cho tác vụ phức tạp cần suy luận nhiều bước.</p>
+                                </div>
+                                <div class="model-item">
+                                    <div class="model-badge google">🔷 Google</div>
+                                    <h4>Gemma 3 27B</h4>
+                                    <div class="model-specs">
+                                        <span>📏 128K context</span>
+                                        <span>🆓 Miễn phí</span>
+                                    </div>
+                                    <p>Model mã nguồn mở, miễn phí, chạy qua proxy xoay vòng key.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Commands Reference -->
+                    <div class="card guide-card">
+                        <div class="card-header">
+                            <h3>💡 Các Lệnh Thường Dùng</h3>
+                            <p>Danh sách các lệnh/cụm từ bot hiểu tốt nhất</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="command-categories">
+                                <div class="command-category">
+                                    <h4>🌐 Trình duyệt</h4>
+                                    <ul>
+                                        <li><code>Mở trình duyệt và vào [URL]</code></li>
+                                        <li><code>Tìm kiếm [từ khóa] trên [trang]</code></li>
+                                        <li><code>Click vào nút [tên nút]</code></li>
+                                        <li><code>Điền [nội dung] vào ô [tên ô]</code></li>
+                                        <li><code>Cuộn xuống dưới trang</code></li>
+                                        <li><code>Chụp ảnh màn hình</code></li>
+                                        <li><code>Lấy nội dung text của [phần tử]</code></li>
+                                    </ul>
+                                </div>
+                                <div class="command-category">
+                                    <h4>📱 Telegram</h4>
+                                    <ul>
+                                        <li><code>Gửi tin nhắn [nội dung] qua Telegram</code></li>
+                                        <li><code>Gửi hình ảnh [đường dẫn] qua Telegram</code></li>
+                                        <li><code>Trả lời tin nhắn với [nội dung]</code></li>
+                                        <li><code>Thông báo cho tôi khi [điều kiện]</code></li>
+                                    </ul>
+                                </div>
+                                <div class="command-category">
+                                    <h4>📁 File & Dữ liệu</h4>
+                                    <ul>
+                                        <li><code>Lưu kết quả vào file [tên file]</code></li>
+                                        <li><code>Đọc nội dung file [tên file]</code></li>
+                                        <li><code>Tạo file Excel với dữ liệu</code></li>
+                                        <li><code>Xuất dữ liệu ra JSON</code></li>
+                                    </ul>
+                                </div>
+                                <div class="command-category">
+                                    <h4>⏰ Thời gian</h4>
+                                    <ul>
+                                        <li><code>Đợi [X] giây rồi [hành động]</code></li>
+                                        <li><code>Lặp lại mỗi [X] phút</code></li>
+                                        <li><code>Chạy vào lúc [giờ] mỗi ngày</code></li>
+                                        <li><code>Chạy vào thứ [X] hàng tuần</code></li>
+                                    </ul>
+                                </div>
+                                <div class="command-category">
+                                    <h4>🔀 Điều kiện</h4>
+                                    <ul>
+                                        <li><code>Nếu [điều kiện] thì [hành động]</code></li>
+                                        <li><code>Nếu không tìm thấy, [hành động khác]</code></li>
+                                        <li><code>Nếu giá dưới [số tiền] thì thông báo</code></li>
+                                        <li><code>Nếu có lỗi thì dừng và báo cáo</code></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ -->
+                    <div class="card guide-card">
+                        <div class="card-header">
+                            <h3>❓ Câu Hỏi Thường Gặp</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="faq-list">
+                                <div class="faq-item">
+                                    <div class="faq-question">Làm sao để bot chạy 24/7?</div>
+                                    <div class="faq-answer">
+                                        Bạn cần chạy bot trên một server luôn bật. Có thể dùng:
+                                        <ul>
+                                            <li><strong>Render.com</strong> - Miễn phí, tự động deploy từ GitHub</li>
+                                            <li><strong>Koyeb.com</strong> - Miễn phí, hỗ trợ Docker</li>
+                                            <li><strong>VPS</strong> - Thuê VPS và chạy với PM2</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question">Tại sao bot không phản hồi trên Telegram?</div>
+                                    <div class="faq-answer">
+                                        Kiểm tra:
+                                        <ul>
+                                            <li>Bot Token có đúng không?</li>
+                                            <li>Bot đã được <code>/start</code> chưa?</li>
+                                            <li>Username của bạn có trong danh sách Allowed Users không?</li>
+                                            <li>Plugin Telegram đã được bật chưa?</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question">Làm sao để dùng Google Gemma miễn phí?</div>
+                                    <div class="faq-answer">
+                                        <ol>
+                                            <li>Lấy nhiều API Key từ <a
+                                                    href="https://aistudio.google.com/apikey">aistudio.google.com</a>
+                                            </li>
+                                            <li>Thêm vào file <code>.env</code>: GOOGLE_API_KEY_1, GOOGLE_API_KEY_2, ...
+                                            </li>
+                                            <li>Chạy proxy: <code>npm run proxy</code></li>
+                                            <li>Chọn model Gemma 3 trong cấu hình</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question">Bot có thể làm những gì?</div>
+                                    <div class="faq-answer">
+                                        <ul>
+                                            <li>🌐 Lướt web, tìm kiếm, thu thập dữ liệu</li>
+                                            <li>📊 So sánh giá, theo dõi sản phẩm</li>
+                                            <li>📰 Tổng hợp tin tức, tóm tắt nội dung</li>
+                                            <li>💬 Trả lời tin nhắn Telegram tự động</li>
+                                            <li>📁 Đọc/ghi file, tạo báo cáo</li>
+                                            <li>⏰ Chạy tác vụ theo lịch</li>
+                                            <li>🖥️ Thực thi lệnh hệ thống (nếu được phép)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terminal Commands -->
+                    <div class="card guide-card">
+                        <div class="card-header">
+                            <h3>🖥️ Lệnh Terminal</h3>
+                            <p>Các lệnh để chạy Moltbot</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="terminal-commands">
+                                <div class="terminal-cmd">
+                                    <div class="cmd-title">Chạy Config Server (giao diện này)</div>
+                                    <code>npm run config</code>
+                                </div>
+                                <div class="terminal-cmd">
+                                    <div class="cmd-title">Chạy Google Proxy (nếu dùng Gemma)</div>
+                                    <code>npm run proxy</code>
+                                </div>
+                                <div class="terminal-cmd">
+                                    <div class="cmd-title">Chạy OpenClaw Bot</div>
+                                    <code>openclaw --config openclaw.json</code>
+                                </div>
+                                <div class="terminal-cmd">
+                                    <div class="cmd-title">Cài đặt dependencies</div>
+                                    <code>npm install</code>
+                                </div>
                             </div>
                         </div>
                     </div>
